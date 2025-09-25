@@ -5,10 +5,18 @@ import BotonIzquierda from '../BotonIzquierda';
 import BotonDerecha from '../BotonDerecha';
 
 interface HorizontalScrollerProps {
+  items: {
+    urlImagenDesktop: string,
+    urlImagenMobile: string,
+    textoAlt: string,
+  }[]
+  autoscroll?: boolean;
   autoScrollInterval?: number;
 }
 
 const Carrusel: React.FC<HorizontalScrollerProps> = ({
+  items,
+  autoscroll = true,
   autoScrollInterval = 3000, // default value of auto-scroll
 }) => {
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -38,7 +46,9 @@ const Carrusel: React.FC<HorizontalScrollerProps> = ({
 
   // Start auto-scroll when the component is mounted
   useEffect(() => {
-    startAutoScroll();
+    if (autoscroll) {
+      startAutoScroll();
+    }
 
     return () => {
       if (autoScrollTimeoutRef.current) {
@@ -65,7 +75,9 @@ const Carrusel: React.FC<HorizontalScrollerProps> = ({
     targetX: number,
     duration = 0.3,
   ) {
-    resetAutoScroll();
+    if (autoscroll) {
+      resetAutoScroll();
+    }
 
     // Enable hardware acceleration
     element.style.willChange = 'transform';
@@ -174,33 +186,26 @@ const Carrusel: React.FC<HorizontalScrollerProps> = ({
         onTouchEnd={handleEnd}
       >
         {
-          new Array(4).fill(0).map((_, idx) => 
+          items?.map((item, idx) => 
             <div
               key={idx + 1}
               className="relative shrink-0 md:snap-start aspect-[4/5] md:aspect-auto md:h-[430px] w-full"
             >
-              <Image
-                priority
-                loading="eager"
-                fetchPriority={idx === 0 ? 'high' : 'auto'}
-                src={`https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/productos/producto-destacado-${idx + 1}.webp?v=1`}
-                alt={`Producto destacado ${idx + 1}`}
-                fill
-                className="object-cover object-center"
-                quality={85} // Optimización de calidad
-                sizes="100vw"
-                placeholder="blur" // Opcional: añadir blur placeholder
-                blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//69NAMDA4MqxgFFALAQC/4vWZ0AAAAASUVORK5CYII=" // Base64 de baja calidad
-                // Custom loader para diferentes imágenes por breakpoint
-                loader={({ width }) => {
-                  const isMobile = width <= 767
-                  const quality = isMobile ? 90 : 85
-                  const imageName = isMobile 
-                    ? `producto-destacado-${idx + 1}.webp` 
-                    : `producto-destacado-${idx + 1}-desktop.webp`
-                  return `https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/productos/${imageName}?v=1&w=${width}&q=${quality || 85}`
-                }}
-              />
+              <picture>
+                <source media="(min-width: 768px)" srcSet={item.urlImagenDesktop}></source>
+                <source media="(max-width: 767px)" srcSet={item.urlImagenMobile}></source>
+                <Image
+                  priority
+                  loading="eager"
+                  fetchPriority={idx === 0 ? 'high' : 'auto'}
+                  src="https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/genericas/transparente-chica.svg"
+                  alt={item.textoAlt}
+                  fill
+                  className="object-cover object-center w-full h-full"
+                  quality={85} // Optimización de calidad
+                  sizes="100vw"
+                />
+              </picture>
             </div>
           )
         }
@@ -209,7 +214,7 @@ const Carrusel: React.FC<HorizontalScrollerProps> = ({
         <BotonDerecha onClick={() => swipeSlide(currentIndexRef.current + 1)} />
       </div>
       <div className="absolute bottom-2 w-full z-40 flex items-center justify-center h-[40px] gap-6">
-        {Array(4).fill(1).map((_, index) => (
+        {items?.map((_, index) => (
           <button
             id={`bullet-${index}`}
             key={index}

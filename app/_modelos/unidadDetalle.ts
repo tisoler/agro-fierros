@@ -1,32 +1,37 @@
 import DataBaseConnection from '@/app/_lib/sequelize';
 import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, Sequelize } from 'sequelize';
 
-export class Marca extends Model<
-  InferAttributes<Marca>,
-  InferCreationAttributes<Marca>
+export class UnidadDetalle extends Model<
+  InferAttributes<UnidadDetalle>,
+  InferCreationAttributes<UnidadDetalle>
 > {
   declare id: CreationOptional<number>;
-  declare nombre: string;
+  declare idUnidad: number;
+  declare detalle: string;
 }
 
-export const initMarca = async (db?: Sequelize) => {
+export const initUnidadDetalle = async (db?: Sequelize) => {
   const sequelize = db ?? await DataBaseConnection.getSequelizeInstance();
 
-  Marca.init(
+  UnidadDetalle.init(
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      nombre: {
+      idUnidad: {
+        type: DataTypes.NUMBER,
+        allowNull: false,
+      },
+      detalle: {
         type: DataTypes.STRING,
         allowNull: false,
       },
     },
     {
       sequelize,
-      tableName: 'marcas',
+      tableName: 'unidadDetallesTecnicos',
       timestamps: false,
     }
   );

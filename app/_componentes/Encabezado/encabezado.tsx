@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { IconoLupa } from "../Iconos/Lupa";
 import { cdnLoader } from "@/app/_lib/utilidades";
+import estilo from './encabezado.module.css';
 
 export function Encabezado() {
   const headerMobileRef = useRef<HTMLDivElement>(null);
@@ -22,10 +23,10 @@ export function Encabezado() {
       if (window.scrollY <= lastScrollY.current || window.scrollY < 50) {
           // Scroll hacia arriba - mostrar header
           // O estamos en la parte superior
-          headerRef.current.classList.remove('hidden');
+          headerRef.current.classList.remove(estilo.hidden);
       } else {
           // Scroll hacia abajo - ocultar header
-          headerRef.current.classList.add('hidden');
+          headerRef.current.classList.add(estilo.hidden);
       }
       
       lastScrollY.current = window.scrollY;
@@ -42,8 +43,8 @@ export function Encabezado() {
 
   return (
     <>
-      <div className='headerPlaceholder h-[60px] bg-white'></div>
-      <header ref={headerEscritorioRef} className='w-full h-[60px] bg-color-marca fixed top-0 left-0 z-50 header headerEscritorio'>
+      <div className={`${estilo.headerPlaceholder} h-[60px] bg-white`}></div>
+      <header ref={headerEscritorioRef} className={`w-full h-[60px] bg-color-marca fixed top-0 left-0 z-50 ${estilo.header} ${estilo.headerEscritorio}`}>
         <div className="pl-6 flex w-full items-center justify-between">
           <Link prefetch={false} href="/" className="flex items-center text-2xl text-slate-50">
             <div className="flex justify-center items-center mr-[0.4rem]">
@@ -100,7 +101,7 @@ export function Encabezado() {
         </div>
       </header>
       <>
-        <header ref={headerMobileRef} className='w-full fixed top-0 left-0 z-50 header headerMobile'>
+        <header ref={headerMobileRef} className={`w-full fixed top-0 left-0 z-50 ${estilo.header} ${estilo.headerMobile}`}>
           <div className="flex w-full items-center justify-between pl-2 py-3 bg-color-marca">
             <Link prefetch={false} href="/" className="brand flex items-center text-white">
               <div className="flex justify-center items-center mr-[0.4rem]">
@@ -113,7 +114,7 @@ export function Encabezado() {
                   src={"https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/genericas/logo.svg"}
                 />
               </div>
-              <h1 className="grid cols-2 text-[25px]">
+              <h1 className="grid cols-2 text-[23px]">
                 <span className="font-semibold col-1 row-1 leading-5">
                   Fabio Tommasi
                 </span>
@@ -126,10 +127,10 @@ export function Encabezado() {
               <button aria-label="Desplegar buscador" className="ml-3 flex items-center justify-center p-1">
                 <IconoLupa />
               </button>
-              <button className={'burger'} id="burger" aria-label="Abrir menu">
-                <span className={'burgerLine'}></span>
-                <span className={'burgerLine'}></span>
-                <span className={'burgerLine'}></span>
+              <button className={estilo.burger} id="burger" aria-label="Abrir menu">
+                <span className={estilo.burgerLine}></span>
+                <span className={estilo.burgerLine}></span>
+                <span className={estilo.burgerLine}></span>
               </button>
             </div>
           </div>

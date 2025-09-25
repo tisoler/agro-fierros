@@ -1,11 +1,13 @@
 import React from "react"
 import SkeletonItem from "../SkeletonItem";
 
-export default function SkeletonCarruselUnidades() {
+export default function SkeletonCarruselUnidades({ variante = 'grande' }: { variante?: 'grande' | 'chico' }) {
   return (
-    <div className="flex flex-col w-full py-12 md:py-20 px-2 md:px-20">
+    <div className={`
+      flex flex-col w-full ${variante === 'grande' ? 'py-12 md:py-20 px-2 md:px-20' : 'pt-4 pb-12 md:pt-10 md:pb-20 px-0'} 
+    `}>
       <div className="">
-        <SkeletonItem className="h-[25px] w-[25px] rounded-lg mb-2 ml-1" />
+        { variante === 'grande' && <SkeletonItem className="h-[25px] w-[25px] rounded-lg mb-2 ml-1" />}
         <SkeletonItem className="h-[30px] md:h-[36px] w-[200px] md:w-[285px] rounded-2xl" />
       </div>
       <div className="flex items-center relative w-full overflow-hidden pt-6">

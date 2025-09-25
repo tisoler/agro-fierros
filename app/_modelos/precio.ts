@@ -1,5 +1,5 @@
 import DataBaseConnection from '@/app/_lib/sequelize';
-import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, Sequelize } from 'sequelize';
 
 export class PrecioMercado extends Model<
   InferAttributes<PrecioMercado>,
@@ -12,8 +12,8 @@ export class PrecioMercado extends Model<
   declare icono: string;
 }
 
-export const initPrecioMercado = async () => {
-  const sequelize = await DataBaseConnection.getSequelizeInstance();
+export const initPrecioMercado = async (db?: Sequelize) => {
+  const sequelize = db ?? await DataBaseConnection.getSequelizeInstance();
 
   PrecioMercado.init(
     {

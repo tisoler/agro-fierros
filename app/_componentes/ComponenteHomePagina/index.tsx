@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import { headers } from 'next/headers'
 import { userAgentFromString } from 'next/server';
 import dynamic from "next/dynamic";
-import { obtenerCategorias, obtenerPrecios, obtenerUnidadesNovedades, obtenerUnidadesOportunidades } from "@/app/_lib/servicios";
 import Carrusel from "../Carrusel";
 import CarruselUnidades from "../CarruselUnidades";
 import SkeletonCarrusel from "../Skeletons/Carrusel";
@@ -12,9 +11,15 @@ import SkeletonCarruselMercadoArgentino from "../Skeletons/CarruselMercadoArgent
 import SkeletonSubtitulo from "../Skeletons/Subtitulo";
 
 // Carga diferida del componente que no es crítico
-const SubtituloDinamico = dynamic(() => import('../Subtitulo/subtitulo'));
-const ListaCategorias = dynamic(() => import('../CategoriaBloque/categoriaBloque'));
-const CarruselMercadoArgentino = dynamic(() => import('../CarruselPrecios/carruselPrecios'));
+const SubtituloDinamico = dynamic(() => import('../Subtitulo/subtitulo'), {
+  loading: () => <SkeletonSubtitulo />
+});
+const ListaCategorias = dynamic(() => import('../ListaCategorias'), {
+  loading: () => <SkeletonListaCategorias />
+});
+const CarruselMercadoArgentino = dynamic(() => import('../CarruselPrecios/carruselPrecios'), {
+  loading: () => <SkeletonCarruselMercadoArgentino />
+});
 const PlacaVenta = dynamic(() => import('../PlacaVenta'));
 
 const ComponenteHome = async () => {
@@ -22,35 +27,29 @@ const ComponenteHome = async () => {
   const userAgent = headersList.get('user-agent');
   const esDispositivoMovil = userAgentFromString(userAgent || undefined)?.device?.type === 'mobile';
 
-  const [precios, categorias, unidadesOportunidades, unidadesNovedades] = await Promise.all([
-    obtenerPrecios(),
-    obtenerCategorias(),
-    obtenerUnidadesOportunidades(),
-    obtenerUnidadesNovedades(),
-  ]);
+  const itemsCarruselPrincipal = new Array(4).fill(0).map((_, idx) => ({
+    urlImagenDesktop: `https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/productos/producto-destacado-${idx + 1}-desktop.webp`,
+    urlImagenMobile: `https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/productos/producto-destacado-${idx + 1}.webp`,
+    textoAlt: `Producto destacado ${idx + 1}`,
+  }));
 
   return (
     <section className="flex flex-col bg-white">
       <Suspense fallback={<SkeletonCarrusel />}>
-        <Carrusel />
+        <Carrusel items={itemsCarruselPrincipal} />
       </Suspense>
       <Suspense fallback={<SkeletonCarruselUnidades />}>
-        <CarruselUnidades unidades={unidadesOportunidades} titulo='Oportunidades' priorizar={!esDispositivoMovil} />
+        <CarruselUnidades titulo='Oportunidades' tipo='oportunidades' priorizar={!esDispositivoMovil} />
       </Suspense>
-      <Suspense fallback={<SkeletonSubtitulo />}>
-        <SubtituloDinamico />
-      </Suspense>
-      <Suspense fallback={<SkeletonListaCategorias />}>
-        <ListaCategorias categorias={categorias} />
-      </Suspense>
-      <Suspense fallback={<SkeletonCarruselMercadoArgentino />}>
-        <div className="relative flex w-full justify-center">
-          <CarruselMercadoArgentino precios={precios} />
-        </div>
-      </Suspense>
+      <SubtituloDinamico />
+      <ListaCategorias />
+      <div className="relative flex w-full justify-center">
+        <CarruselMercadoArgentino />
+      </div>
       <div className="mt-8 md:mt-0">
         <Suspense fallback={<SkeletonCarruselUnidades />}>
-          <CarruselUnidades unidades={unidadesNovedades} titulo='Novedades' />
+          {/* Usamos Suspense porque arriba ya lo usamos, no conviene duplicar el componente usando dynamic acá porque lo duplicaría en el bundle */}
+          <CarruselUnidades titulo='Novedades' tipo='novedades' />
         </Suspense>
       </div>
       <PlacaVenta />

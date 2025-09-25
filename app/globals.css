@@ -2,7 +2,7 @@
 
 :root {
   --background: #e6e5e5;
-  --foreground: #171717;
+  --foreground: #171717;  /* Font family definitions */
 }
 
 @theme inline {
@@ -11,20 +11,7 @@
   --color-color-marca: #eb1923;
   --color-color-sec-marca: #babdbf;
   --color-color-fondo-gris: #F3F3F3;
-
-  /* Font family definitions */
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, 
-              "Segoe UI", Roboto, "Helvetica Neue", Arial, 
-              "Noto Sans", sans-serif, "Apple Color Emoji", 
-              "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  
-  --font-mono: var(--font-geist-mono); /* Keep your mono font as is */
-  
-  /* If you need a body font (optional) */
-  --font-body: var(--font-sans); /* Reuse sans font or define separately */
-
   --breakpoint-xs: 375px;
-  
   --animate-sweep: sweep 2s ease-in-out infinite;
 }
 

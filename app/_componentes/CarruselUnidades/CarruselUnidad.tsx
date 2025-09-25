@@ -23,10 +23,8 @@ const UnidadTarjeta = (
           priority={priorizar}
           fill
           sizes="(max-width: 767px) 240px, 280px"
-          className="object-cover object-center"
+          className="object-cover object-center w-full h-full"
           quality={80}
-          placeholder="blur"
-          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//69NAMDA4MqxgFFALAQC/4vWZ0AAAAASUVORK5CYII="
         />
       </div>
       <h2

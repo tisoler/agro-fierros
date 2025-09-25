@@ -4,8 +4,8 @@ content-type: application/json
 
 {
     "secret": "puto_el_que_lee",
-    "path": "/",
-    "tags": ["precios-mercado", "categorias", "unidades"]
+    "path": "/unidad",
+    "tags": ["precios-mercado", "categorias", "unidades", "rastro-categorias"]
 }
 
 ##### test

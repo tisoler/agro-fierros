@@ -1,6 +1,7 @@
 import Image from 'next/image';
-import { PrecioMercadoTipo } from '@/app/_lib/tipos';
 import estilo from './carruselPrecios.module.css';
+import { obtenerPrecios } from '@/app/_lib/servicios';
+import { PrecioMercadoTipo } from '@/app/_lib/tipos';
 
 export const revalidate = 3600; // regenerar la página cada 1 hora y guardar en caché
 
@@ -11,29 +12,31 @@ const ICONO: { [key: string]: string } = {
   trigoIcono: 'https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/genericas/trigo.svg',
 }
 
-const CarruselMercadoArgentino = ({ precios }: { precios: PrecioMercadoTipo[] }) => {
+const CarruselMercadoArgentino = async () => {
+  const precios = await obtenerPrecios();
+
   return (
     <div className={`w-[90vw] md:w-[750px] mx-auto overflow-hidden rounded-lg ${estilo.sliderContenedor} mb-5 absolute top-[-35px] z-40 bg-white`}>
       <div className={estilo.slider}>
         {
           <>
             {
-              precios?.map((p, idx) => (
+              precios?.map((p: PrecioMercadoTipo, idx) => (
                 <div key={idx} className={estilo.slide}>
                   <Image loading='lazy' className='mb-1' src={ICONO[p.icono] ?? ICONO.dolarIcono} height={30} width={30} alt='Ícono dólar'/>
                   <div className="flex flex-col items-start leading-5">
-                    <span>${p.precio}</span>
+                    <span>${p.precio?.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</span>
                     <span className='font-bold'>{p.nombre}</span>
                   </div>
                 </div>
               ))
             }
             {
-              precios?.map((p, idx) => (
+              precios?.map((p: PrecioMercadoTipo, idx) => (
                 <div key={`${idx}-bis`} className={estilo.slide}>
                   <Image loading='lazy' className='mb-1' src={ICONO[p.icono] ?? ICONO.dolarIcono} height={30} width={30} alt='Ícono dólar'/>
                   <div className="flex flex-col items-start leading-5">
-                    <span>${p.precio}</span>
+                    <span>${p.precio?.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</span>
                     <span className='font-bold'>{p.nombre}</span>
                   </div>
                 </div>

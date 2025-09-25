@@ -25,8 +25,6 @@ const CategoriaBloque = ({ categoria, esGrande = false }: { categoria: Categoria
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover object-center"
           quality={85} // Optimización de calidad
-          placeholder="blur" // Opcional: añadir blur placeholder
-          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//69NAMDA4MqxgFFALAQC/4vWZ0AAAAASUVORK5CYII=" // Base64 de baja calidad
         />
       </div>
       <div
@@ -47,16 +45,4 @@ const CategoriaBloque = ({ categoria, esGrande = false }: { categoria: Categoria
   );
 };
 
-const ListaCategorias = ({ categorias }: { categorias: CategoriaTipo[] }) => {
-  return (
-    <section className="grid grid grid-cols-1 items-center md:grid-cols-9 gap-4 px-2 md:px-20 pb-20 md:pb-30 bg-color-fondo-gris">
-      {
-        categorias?.map((categoria, idx) => (
-          <CategoriaBloque key={categoria.id} categoria={categoria} esGrande={[0, 3, 4, 7].includes(idx)} />
-        ))
-      }
-    </section>
-  );
-};
-
-export default ListaCategorias;
+export default CategoriaBloque;

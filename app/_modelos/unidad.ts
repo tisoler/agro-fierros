@@ -1,7 +1,9 @@
 import DataBaseConnection from '@/app/_lib/sequelize';
-import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, Sequelize } from 'sequelize';
 import { initMarca, Marca } from './marca';
 import { Categoria, initCategoria } from './categoria';
+import { initUnidadImagen, UnidadImagen } from './unidadImagen';
+import { initUnidadDetalle, UnidadDetalle } from './unidadDetalle';
 
 export class Unidad extends Model<
   InferAttributes<Unidad>,
@@ -21,8 +23,8 @@ export class Unidad extends Model<
   declare slug: string;
 }
 
-export const initUnidad = async () => {
-  const sequelize = await DataBaseConnection.getSequelizeInstance();
+export const initUnidad = async (db?: Sequelize) => {
+  const sequelize = db ?? await DataBaseConnection.getSequelizeInstance();
 
   Unidad.init(
     {
@@ -85,14 +87,26 @@ export const initUnidad = async () => {
   );
 
   // Asociar Marca a Unidad
-  await initMarca();
+  await initMarca(sequelize);
   if (!Unidad.associations.marca) {
     Unidad.belongsTo(Marca, { foreignKey: 'idMarca', as: 'marca' });
   }
 
   // Asociar Categoria a Unidad
-  await initCategoria();
+  await initCategoria(sequelize);
   if (!Unidad.associations.categoria) {
     Unidad.belongsTo(Categoria, { foreignKey: 'idCategoria', as: 'categoria' });
+  }
+
+  // Asociar Ímagenes a Unidad
+  await initUnidadImagen(sequelize);
+  if (!Unidad.associations.imagenes) {
+    Unidad.hasMany(UnidadImagen, { foreignKey: 'idUnidad', as: 'imagenes' });
+  }
+
+  // Asociar Detalles Técnicos a Unidad
+  await initUnidadDetalle(sequelize);
+  if (!Unidad.associations.detalles) {
+    Unidad.hasMany(UnidadDetalle, { foreignKey: 'idUnidad', as: 'detalles' });
   }
 };

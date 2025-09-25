@@ -1,5 +1,5 @@
 "use client";
-import { WHATSAPP_NUMBER } from "@/app/_lib/constantes";
+import { WHATSAPP_MENSAJE_GENERAL, WHATSAPP_NUMERO } from "@/app/_lib/constantes";
 import Image from "next/image"
 
 type WhatsAppButtonProps = {
@@ -9,9 +9,9 @@ type WhatsAppButtonProps = {
 }
 
 const WhatsAppBoton = ({ fijo = false, mensaje, dimension = 'grande' }: WhatsAppButtonProps) => {
-  const message = encodeURIComponent(mensaje ?? 'Hola, quisiera que me contacten para hacer una consulta.');
+  const mensajeWhatsApp = encodeURIComponent(mensaje ?? WHATSAPP_MENSAJE_GENERAL);
 
-  const whatsappLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+  const whatsappLink = `https://wa.me/${WHATSAPP_NUMERO}?text=${mensajeWhatsApp}`;
   const ancho = dimension === 'chico' ? 'md:w-[3rem]' : dimension === 'mediano' ? 'md:w-16' : 'md:w-[4rem]';
   const alto = dimension === 'chico' ? 'md:h-[3rem]' : dimension === 'mediano' ? 'md:h-16' : 'md:h-[4rem]';
   const padding = dimension === 'chico' ? 'p-[.6rem]' : dimension === 'mediano' ? 'p-2' : 'p-[.75rem]';
@@ -21,8 +21,8 @@ const WhatsAppBoton = ({ fijo = false, mensaje, dimension = 'grande' }: WhatsApp
 
   return (
     <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
-      <button className={`${fijo ? "fixed z-50 outline-none cursor-pointer right-1 bottom-[40vh] md:right-2 md:bottom-[30vh]" : "block"} ${anchoMobil} ${ancho} ${altoMobil} ${alto} ${padding} rounded-full bg-green-500 text-white hover:bg-green-600`}>
-        <Image width={70} height={70} className="object-cover" alt={`WhatsApp a ${WHATSAPP_NUMBER}`} src={`https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/genericas/whatsapp.svg`} priority loading='eager' />
+      <button className={`${fijo ? "fixed z-50 outline-none cursor-pointer right-1 bottom-[15vh] md:right-2 md:bottom-[20vh]" : "block"} ${anchoMobil} ${ancho} ${altoMobil} ${alto} ${padding} rounded-full bg-green-500 text-white hover:bg-green-600`}>
+        <Image width={70} height={70} className="object-cover" alt='Consultar por WhatsApp' src={`https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/genericas/whatsapp.svg`} priority loading='eager' />
       </button>
     </a>
   );

@@ -1,62 +1,52 @@
 import DataBaseConnection from '@/app/_lib/sequelize';
 import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, Sequelize } from 'sequelize';
 
-export class Categoria extends Model<
-  InferAttributes<Categoria>,
-  InferCreationAttributes<Categoria>
+export class UnidadImagen extends Model<
+  InferAttributes<UnidadImagen>,
+  InferCreationAttributes<UnidadImagen>
 > {
   declare id: CreationOptional<number>;
-  declare titulo: string;
-  declare descripcion: string;
-  declare idCategoriaPadre: number;
-  declare imagenEscritorio: string;
-  declare imagenMovil: string;
-  declare href: string;
-  declare mostrarHome: boolean;
+  declare urlEscritorio: string;
+  declare urlMobile: string;
+  declare urlMini: string;
+  declare textoAlt: string;
+  declare idUnidad: number;
 }
 
-export const initCategoria = async (db?: Sequelize) => {
+export const initUnidadImagen = async (db?: Sequelize) => {
   const sequelize = db ?? await DataBaseConnection.getSequelizeInstance();
 
-  Categoria.init(
+  UnidadImagen.init(
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      titulo: {
+      urlEscritorio: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      descripcion: {
+      urlMobile: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      idCategoriaPadre: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      imagenEscritorio: {
+      urlMini: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      imagenMovil: {
+      textoAlt: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      href: {
-        type: DataTypes.STRING,
+      idUnidad: {
+        type: DataTypes.NUMBER,
         allowNull: false,
-      },
-      mostrarHome: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
       },
     },
     {
       sequelize,
-      tableName: 'categorias',
+      tableName: 'imagenes',
       timestamps: false,
     }
   );

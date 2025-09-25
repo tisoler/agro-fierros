@@ -1,24 +1,24 @@
 import type { Metadata } from 'next';
 import { Afacad_Flux, Geist_Mono,  } from 'next/font/google';
+import { GoogleTagManager } from '@next/third-parties/google';
 import './globals.css';
-import { Encabezado } from './_componentes/Encabezado';
-import WhatsAppButton from './_componentes/WhatsApp';
+import { Encabezado } from './_componentes/Encabezado/encabezado';
+import WhatsAppButton from './_componentes/IconosSvg/WhatsApp';
 import Footer from './_componentes/Footer/Footer';
 
 const geistMono = Geist_Mono({
-  variable: '--font-mono',
+  variable: '--font-geist-mono',
   subsets: ['latin'],
   display: 'swap',
   preload: false,
-  adjustFontFallback: true,
+  fallback: ['system-ui', 'sans-serif'],
 });
 
-const afacadSans = Afacad_Flux({
-  variable: '--font-sans',
+const afacadFlux = Afacad_Flux({
+  variable: '--font-afacad-flux',
   subsets: ['latin'],
   display: 'swap',
   preload: true,
-  adjustFontFallback: true,
 });
 
 export const metadata: Metadata = {
@@ -46,8 +46,8 @@ export const metadata: Metadata = {
   applicationName: 'fabioTommasiAgro',
   authors: [{ name: 'Tisoler', url: 'https://github.com/tisoler' }],
   robots: {
-    index: true,
-    follow: true,
+    index: false,
+    follow: false,
     nocache: false,
     googleBot: {
       index: true,
@@ -66,94 +66,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang='en'>
-      <head>
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
-              /* Los estilos críticos para el viewport inicial */
-              /* ENCABEZADO */
-              .header {
-                transition: transform 0.3s ease-in-out;
-              }
-
-              .header.hidden {
-                transform: translateY(-100%);
-              }
-
-              .headerMobile {
-                display: flex;
-              }
-
-              @media (min-width: 768px) {
-                .headerMobile {
-                  display: none;
-                }
-              }
-
-              .headerEscritorio {
-                display: none;
-              }
-
-              @media (min-width: 768px) {
-                .headerEscritorio {
-                  display: flex;
-                }
-              }
-
-              .headerPlaceholder {
-                transition: height 0.3s ease;
-              }
-              
-              .burger {
-                position: relative;
-                display: flex;
-                cursor: pointer;
-                width: 25px;
-                height: 20px;
-                opacity: 0;
-                visibility: hidden;
-                background: transparent;
-                align-items: center;
-                margin: auto 15px;
-              }
-
-              @media (max-width: 767px) {
-                .burger {
-                  opacity: 1;
-                  visibility: visible;
-                }
-              }
-
-              .burger .burgerLine {
-                position: absolute;
-                display: block;
-                left: 0;
-                width: 100%;
-                height: 2px;
-                opacity: 1;
-                border-radius: 15px;
-                background: #fff;
-              }
-
-              .burger .burgerLine:nth-child(1) {
-                top: 0px;
-              }
-
-              .burger .burgerLine:nth-child(2) {
-                top: 8px;
-                width: 70%;
-              }
-
-              .burger .burgerLine:nth-child(3) {
-                top: 16px;
-              }          
-            `,
-          }}
-        />
-      </head>
+    <html lang='es'>
       <body
-        className={`${afacadSans.className} ${geistMono.className} antialiased`}
+        className={`${afacadFlux.className} ${geistMono.className} antialiased`}
       >
         <Encabezado />
         <main className='relative'>
@@ -162,6 +77,7 @@ export default function RootLayout({
           <WhatsAppButton fijo />
         </main>
         <Footer />
+        <GoogleTagManager gtmId='GTM-K92JH9KX' />
       </body>
     </html>
   );

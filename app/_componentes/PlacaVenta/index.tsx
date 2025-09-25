@@ -44,8 +44,6 @@ const PlacaVenta = () => {
             sizes="(max-width: 767px) 320px, 350px"
             className="w-auto h-full object-cover object-center"
             quality={85} // Optimización de calidad
-            placeholder="blur" // Opcional: añadir blur placeholder
-            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//69NAMDA4MqxgFFALAQC/4vWZ0AAAAASUVORK5CYII=" // Base64 de baja calidad
           />
         </div>
       </div>
