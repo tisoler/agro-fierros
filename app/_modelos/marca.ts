@@ -7,6 +7,7 @@ export class Marca extends Model<
 > {
   declare id: CreationOptional<number>;
   declare nombre: string;
+  declare slug: string;
 }
 
 export const initMarca = async (db?: Sequelize) => {
@@ -20,6 +21,10 @@ export const initMarca = async (db?: Sequelize) => {
         autoIncrement: true,
       },
       nombre: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      slug: {
         type: DataTypes.STRING,
         allowNull: false,
       },

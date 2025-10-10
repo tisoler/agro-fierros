@@ -20,7 +20,7 @@ const NavegadorCategorias = ({ categorias }: { categorias: CategoriaTipo[] }) =>
             <div key={cat.id} className="flex items-center">
               {idx > 0 ? <span className="mx-1 md:mx-2">{'>'}</span> : null}
               <a
-                href={cat.href}
+                href={`/buscar?categoria=${cat.slug}`}
                 title={cat.titulo}
                 className="hover:text-color-marca underline line-clamp-1"
               >

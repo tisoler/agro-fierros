@@ -9,6 +9,8 @@ import SkeletonCarruselUnidades from "../Skeletons/CarruselUnidades";
 import SkeletonListaCategorias from "../Skeletons/ListaCategorias";
 import SkeletonCarruselMercadoArgentino from "../Skeletons/CarruselMercadoArgentino";
 import SkeletonSubtitulo from "../Skeletons/Subtitulo";
+import ContenedorCarruselNovedades from "../CarruselUnidades/Contenedores/Novedades";
+import ContenedorCarruselOportunidades from "../CarruselUnidades/Contenedores/Oportunidades";
 
 // Carga diferida del componente que no es crítico
 const SubtituloDinamico = dynamic(() => import('../Subtitulo/subtitulo'), {
@@ -36,10 +38,10 @@ const ComponenteHome = async () => {
   return (
     <section className="flex flex-col bg-white">
       <Suspense fallback={<SkeletonCarrusel />}>
-        <Carrusel items={itemsCarruselPrincipal} />
+        <Carrusel items={itemsCarruselPrincipal} esDispositivoMovil={esDispositivoMovil} />
       </Suspense>
       <Suspense fallback={<SkeletonCarruselUnidades />}>
-        <CarruselUnidades titulo='Oportunidades' tipo='oportunidades' priorizar={!esDispositivoMovil} />
+        <ContenedorCarruselOportunidades titulo='Oportunidades' esDispositivoMovil={esDispositivoMovil} priorizar={!esDispositivoMovil} />
       </Suspense>
       <SubtituloDinamico />
       <ListaCategorias />
@@ -49,7 +51,7 @@ const ComponenteHome = async () => {
       <div className="mt-8 md:mt-0">
         <Suspense fallback={<SkeletonCarruselUnidades />}>
           {/* Usamos Suspense porque arriba ya lo usamos, no conviene duplicar el componente usando dynamic acá porque lo duplicaría en el bundle */}
-          <CarruselUnidades titulo='Novedades' tipo='novedades' />
+          <ContenedorCarruselNovedades titulo='Novedades' />
         </Suspense>
       </div>
       <PlacaVenta />

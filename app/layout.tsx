@@ -46,8 +46,8 @@ export const metadata: Metadata = {
   applicationName: 'fabioTommasiAgro',
   authors: [{ name: 'Tisoler', url: 'https://github.com/tisoler' }],
   robots: {
-    index: false,
-    follow: false,
+    index: true,
+    follow: true,
     nocache: false,
     googleBot: {
       index: true,

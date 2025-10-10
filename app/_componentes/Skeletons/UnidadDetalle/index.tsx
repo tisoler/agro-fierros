@@ -1,5 +1,6 @@
 import React from "react"
 import SkeletonItem from "../SkeletonItem";
+import SkeletonCarruselUnidades from "../CarruselUnidades";
 
 export default function SkeletonUnidadDetalle() {
   return (
@@ -34,7 +35,7 @@ export default function SkeletonUnidadDetalle() {
               <SkeletonItem className="h-[34px] w-[108px] rounded" />
             </div>
             <div className='w-full mt-5'>
-              <SkeletonItem className="h-[26px] w-[190px] mt-2 mb-2 rounded" />
+              <SkeletonItem className="h-[26px] w-[180px] mt-2 mb-2 rounded" />
               {
                 new Array(6).fill(1).map((_, idx) => (
                   <SkeletonItem key={idx} className={`w-full h-[41px] border-b-1 border-b-neutral-200 ${idx % 2 !== 0 && 'bg-white'}`} />
@@ -43,6 +44,9 @@ export default function SkeletonUnidadDetalle() {
             </div>
           </section>
         </div>
+      </div>
+      <div className="flex flex-col max-w-[1200px] w-full bg-white px-2 md:px-8">
+        <SkeletonCarruselUnidades variante='chico' />
       </div>
     </div>
   );

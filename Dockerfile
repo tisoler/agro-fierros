@@ -36,7 +36,7 @@ COPY --from=builder --chown=nextjs:nodejs /fabio-tommasi-agro/.next/static ./.ne
 # Set user
 USER nextjs
 
-# Expose and run
+# Expose and run - Puerto 3079 en producción
 EXPOSE 3097
 ENV PORT 3097
 

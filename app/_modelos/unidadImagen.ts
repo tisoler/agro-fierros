@@ -46,7 +46,7 @@ export const initUnidadImagen = async (db?: Sequelize) => {
     },
     {
       sequelize,
-      tableName: 'imagenes',
+      tableName: 'unidadImagenes',
       timestamps: false,
     }
   );

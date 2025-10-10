@@ -14,13 +14,14 @@ export class Unidad extends Model<
   declare descripcion: string;
   declare imagenDestacadaUrl: string;
   declare imagenDestacadaTextoAlt: string;
-  declare idCategoria: number;
   declare esOportunidad: boolean;
   declare esNovedad: boolean;
   declare nuevo: boolean;
   declare modelo: string;
   declare idMarca: number;
   declare slug: string;
+  declare activa: boolean;
+  declare vendida: boolean;
 }
 
 export const initUnidad = async (db?: Sequelize) => {
@@ -49,10 +50,6 @@ export const initUnidad = async (db?: Sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      idCategoria: {
-        type: DataTypes.INTEGER,
-        allowNull: false, 
-      },
       esOportunidad: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
@@ -78,6 +75,14 @@ export const initUnidad = async (db?: Sequelize) => {
         allowNull: false,
         unique: true,
       },
+      activa: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+      },
+      vendida: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     {
       sequelize,
@@ -91,11 +96,17 @@ export const initUnidad = async (db?: Sequelize) => {
   if (!Unidad.associations.marca) {
     Unidad.belongsTo(Marca, { foreignKey: 'idMarca', as: 'marca' });
   }
+  if (!Marca.associations.unidades) {
+    Marca.hasMany(Unidad, { foreignKey: 'idMarca', as: 'unidades' });
+  }
 
   // Asociar Categoria a Unidad
   await initCategoria(sequelize);
-  if (!Unidad.associations.categoria) {
-    Unidad.belongsTo(Categoria, { foreignKey: 'idCategoria', as: 'categoria' });
+  if (!Unidad.associations.categorias) {
+    Unidad.belongsToMany(Categoria, { through: 'unidadCategorias', foreignKey: 'idUnidad', sourceKey: 'id', as: 'categorias', timestamps: false });
+  }
+  if (!Categoria.associations.unidaddes) {
+    Categoria.belongsToMany(Unidad, { through: 'unidadCategorias', foreignKey: 'idCategoria', sourceKey: 'id', as: 'unidades', timestamps: false });
   }
 
   // Asociar Ímagenes a Unidad
@@ -109,4 +120,6 @@ export const initUnidad = async (db?: Sequelize) => {
   if (!Unidad.associations.detalles) {
     Unidad.hasMany(UnidadDetalle, { foreignKey: 'idUnidad', as: 'detalles' });
   }
+
+  return sequelize;
 };

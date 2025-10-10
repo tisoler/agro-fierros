@@ -8,7 +8,7 @@ import { cdnLoader } from "@/app/_lib/utilidades";
 const CategoriaBloque = ({ categoria, esGrande = false }: { categoria: CategoriaTipo, esGrande?: boolean }) => {
   return (
     <Link
-      href={categoria.href}
+      href={`/buscar?categoria=${categoria.slug}`}
       prefetch={false}
       className={`
         relative w-full flex flex-col items-start justify-center aspect-[4/5] md:aspect-auto md:h-[30vw]

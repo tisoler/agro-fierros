@@ -12,12 +12,14 @@ interface HorizontalScrollerProps {
   }[]
   autoscroll?: boolean;
   autoScrollInterval?: number;
+  esDispositivoMovil?: boolean;
 }
 
 const Carrusel: React.FC<HorizontalScrollerProps> = ({
   items,
   autoscroll = true,
   autoScrollInterval = 3000, // default value of auto-scroll
+  esDispositivoMovil = true,
 }) => {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -103,8 +105,8 @@ const Carrusel: React.FC<HorizontalScrollerProps> = ({
     if (currentIndexRef.current === index || !scrollerRef.current) return;
 
     let newIndex = index;
-    if (newIndex > 4 - 1) newIndex = 0;
-    if (newIndex < 0) newIndex = 4 - 1;
+    if (newIndex > items.length - 1) newIndex = 0;
+    if (newIndex < 0) newIndex = items.length - 1;
     currentIndexRef.current = newIndex;
 
     const viewWidth = scrollerRef.current?.offsetWidth;
@@ -134,7 +136,7 @@ const Carrusel: React.FC<HorizontalScrollerProps> = ({
 
     // Calculate boundaries with 10px elastic limit
     const viewWidth = scrollerRef.current?.offsetWidth;
-    const rightTranslateBound = -(4 - 1) * (viewWidth || 1) - 10; // 10px past last
+    const rightTranslateBound = -(items.length - 1) * (viewWidth || 1) - 10; // 10px past last
     const leftTranslateBound = 10; // 10px past first
 
     // Apply elastic resistance when beyond limits
@@ -170,6 +172,10 @@ const Carrusel: React.FC<HorizontalScrollerProps> = ({
     }
   };
 
+  const dimensions = esDispositivoMovil 
+    ? { width: 400, height: 500 }  // iPhone promedio 4:5
+    : { width: 1470, height: 430 };
+
   return (
     <div
       className='relative w-full overflow-hidden'
@@ -200,7 +206,8 @@ const Carrusel: React.FC<HorizontalScrollerProps> = ({
                   fetchPriority={idx === 0 ? 'high' : 'auto'}
                   src="https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/genericas/transparente-chica.svg"
                   alt={item.textoAlt}
-                  fill
+                  width={dimensions.width}
+                  height={dimensions.height}
                   className="object-cover object-center w-full h-full"
                   quality={85} // Optimización de calidad
                   sizes="100vw"

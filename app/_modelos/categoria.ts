@@ -11,7 +11,7 @@ export class Categoria extends Model<
   declare idCategoriaPadre: number;
   declare imagenEscritorio: string;
   declare imagenMovil: string;
-  declare href: string;
+  declare slug: string;
   declare mostrarHome: boolean;
 }
 
@@ -45,7 +45,7 @@ export const initCategoria = async (db?: Sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      href: {
+      slug: {
         type: DataTypes.STRING,
         allowNull: false,
       },

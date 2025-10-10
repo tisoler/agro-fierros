@@ -3,12 +3,11 @@ import React from "react";
 import estilo from './carruselUnidades.module.css';
 import BotonIzquierda from "../BotonIzquierda";
 import BotonDerecha from "../BotonDerecha";
-import { UnidadTipo } from "@/app/_lib/tipos";
+import { UnidadConMarca } from "@/app/_lib/tipos";
 import UnidadTarjeta from "./carruselUnidad";
-import { TipoCarruselUnidades } from ".";
 
-const CarruselUnidades = ({ unidades, priorizar = false, tipo = 'oportunidades' }: 
-  { unidades: UnidadTipo[], priorizar?: boolean, tipo?: TipoCarruselUnidades }) => 
+const CarruselUnidades = ({ unidades, esDispositivoMovil = true, priorizar = false }: 
+  { unidades: UnidadConMarca[], esDispositivoMovil?: boolean, priorizar?: boolean }) => 
 {
   let startX: number;
   let scrollLeft: number;
@@ -48,12 +47,19 @@ const CarruselUnidades = ({ unidades, priorizar = false, tipo = 'oportunidades' 
       <div className="hidden md:flex"><BotonIzquierda onClick={handlePrev} /></div>
       <div
         id="carrusel-unidades"
-        className={`flex gap-4 overflow-x-auto md:mx-1 ${estilo.webkitScrollbarHide}`}
+        className={`flex w-full gap-4 overflow-x-auto md:mx-1 ${estilo.webkitScrollbarHide}`}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         ref={carruselRef}
       >
-        {unidades.map((unidad) => <UnidadTarjeta key={`${tipo}-${unidad.id}`} unidad={unidad} priorizar={priorizar} />)}
+        {unidades.map((unidad) => (
+          <UnidadTarjeta
+            key={unidad.id}
+            unidad={unidad}
+            esDispositivoMovil={esDispositivoMovil}
+            priorizar={priorizar}
+          />
+        ))}
       </div>
       <div className="hidden md:flex"><BotonDerecha onClick={handleNext} /></div>
     </div>

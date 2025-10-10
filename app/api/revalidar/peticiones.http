@@ -4,8 +4,8 @@ content-type: application/json
 
 {
     "secret": "puto_el_que_lee",
-    "path": "/unidad",
-    "tags": ["precios-mercado", "categorias", "unidades", "rastro-categorias"]
+    "path": "/",
+    "tags": ["precios-mercado", "categorias", "unidades", "rastro-categorias", "unidades-busqueda", "marcas-categoria", "generar-arbol-categorias", "arbol-categorias"]
 }
 
 ##### test
@@ -14,8 +14,8 @@ content-type: application/json
 
 {
     "secret": "puto_el_que_lee",
-    "path": "/",
-    "tags": ["precios-mercado", "categorias", "unidades"]
+    "path": "/buscar",
+    "tags": ["precios-mercado", "categorias", "unidades", "rastro-categorias", "unidades-busqueda", "marcas-categoria", "generar-arbol-categorias", "arbol-categorias"]
 }
 
 ##### prod
@@ -24,5 +24,5 @@ content-type: application/json
 
 {
     "secret": "puto_el_que_lee",
-    "tags": ["precios-mercado", "categorias", "unidades"]
+    "tags": ["precios-mercado", "categorias", "unidades", "rastro-categorias", "unidades-busqueda", "marcas-categoria", "generar-arbol-categorias", "arbol-categorias"]
 }

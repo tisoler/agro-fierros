@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Page Title</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+<body>
+  <nav>
+    <a href="imagenes.html">Ir a imágenes</a>
+  </nav>
+  <div>
+    Slugs <br>
+    <input id="inputSlug" style="width: 400px;"/>
+    <button onclick="generarSlug()">Generar</button>
+    <span id="resultadoSlug">Resultado</span>
+  </div>
+  <br>
+  <div>
+    SQL detalles <br>
+    id unidad: <input id="inputIdUnidadDetalle"/>
+    detalles: <input id="inputDetalles" style="width: 1000px;"/>
+    <button onclick="generarSQLDetalles()">Generar</button>
+    <span id="resultadoSQLDetalle">Resultado</span>
+  </div>
+  <br>
+  <div>
+    SQL Imágenes <br>
+    id unidad: <input id="inputIdUnidadImagen"/>
+    carpeta: <input id="inputCarpeta"/>
+    cantidas: <input id="inputCantidad" value="4"/>
+    <button onclick="generarSQLImagenes()">Generar</button>
+    <span id="resultadoSQLImagenes">Resultado</span>
+  </div>
+  <script>
+    function generarSlug() {
+      const texto = document.getElementById('inputSlug');
+      const resultado = document.getElementById('resultadoSlug');
+      resultado.textContent = texto.value?.toLowerCase().replaceAll(' ', '-');
+    }
+
+    function generarSQLDetalles() {
+      const idUnidad = document.getElementById('inputIdUnidadDetalle').value;
+      const detalles = document.getElementById('inputDetalles').value;
+      const resultado = document.getElementById('resultadoSQLDetalle');
+      const listaDetalles = detalles.split('/');
+      let query = 'INSERT INTO unidadDetallesTecnicos (`idUnidad`,`detalle`) VALUES';
+      listaDetalles.forEach(detalle => {
+        query +=` (${idUnidad},'${detalle.trim()}'),`
+      });
+      resultado.textContent = query.slice(0, -1) + ';';
+    }
+
+    function generarSQLImagenes() {
+      const idUnidad = document.getElementById('inputIdUnidadImagen').value;
+      const carpeta = document.getElementById('inputCarpeta').value;
+      const cantidad = document.getElementById('inputCantidad').value;
+      const resultado = document.getElementById('resultadoSQLImagenes');
+      let query = 'INSERT INTO unidadImagenes (`idUnidad`,`urlEscritorio`,`urlMobile`,`urlMini`,`textoAlt`) VALUES';
+      new Array(Number(cantidad)).fill(null).forEach((_, idx) => {
+        const urlComun = `https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/productos/${carpeta}/${idUnidad}/${idx + 1}.webp`;
+        const urlMini = `https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/productos/${carpeta}/${idUnidad}/${idx + 1}-mini.webp`;
+        const textoAlt = `SELECT titulo FROM unidades WHERE id = ${idUnidad}`;
+         query +=` (${idUnidad},'${urlComun}','${urlComun}','${urlMini}','${textoAlt}'),`
+      });
+      resultado.textContent = query.slice(0, -1) + ';';
+    }
+
+  </script>
+</body>
+</html>
+
+

@@ -1,17 +1,25 @@
 version: '3.3'
 
 services:
-  fabio-tommasi-agro:
-    container_name: fabio-tommasi-agro
+  fabio-tommasi-agro: # fabio-tommasi-agro-prod en producción
+    container_name: fabio-tommasi-agro # fabio-tommasi-agro-prod en producción
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3097:3097"
-    restart: unless-stopped
+      - "3097:3097" # 3079 en producción
+    deploy:
+      resources:
+        limits:
+          memory: 1900M  # Límite máximo
+        reservations:
+          memory: 512M   # Mínimo garantizado
+    restart: unless-stopped  # Auto-restart si se cae
+    environment:
+      NODE_OPTIONS: "--max-old-space-size=1800"  # 90% del límite
     # Add healthcheck to ensure the application is running
     healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost:3097"]
-      interval: 10s
-      timeout: 5s
+      test: ["CMD", "wget", "--spider", "http://localhost:3097"] # 3079 en producción
+      interval: 30s
+      timeout: 10s
       retries: 3

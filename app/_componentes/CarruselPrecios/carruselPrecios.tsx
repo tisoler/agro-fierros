@@ -12,6 +12,18 @@ const ICONO: { [key: string]: string } = {
   trigoIcono: 'https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/genericas/trigo.svg',
 }
 
+const PrecioConImagen = ({ precio }: { precio: PrecioMercadoTipo }) => {
+  return (
+    <>
+      <Image loading='lazy' src={ICONO[precio.icono] ?? ICONO.dolarIcono} height={35} width={35} alt='Ícono dólar'/>
+      <div className="flex flex-col items-start">
+        <span className='leading-[18px] font-bold'>{(precio.precio ? Number(precio.precio) : 0).toLocaleString('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 })}</span>
+        <span className='leading-[18px]'>{precio.nombre}</span>
+      </div>
+    </>
+  );
+}
+
 const CarruselMercadoArgentino = async () => {
   const precios = await obtenerPrecios();
 
@@ -23,22 +35,14 @@ const CarruselMercadoArgentino = async () => {
             {
               precios?.map((p: PrecioMercadoTipo, idx) => (
                 <div key={idx} className={estilo.slide}>
-                  <Image loading='lazy' className='mb-1' src={ICONO[p.icono] ?? ICONO.dolarIcono} height={30} width={30} alt='Ícono dólar'/>
-                  <div className="flex flex-col items-start leading-5">
-                    <span>${p.precio?.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</span>
-                    <span className='font-bold'>{p.nombre}</span>
-                  </div>
+                  <PrecioConImagen precio={p} />
                 </div>
               ))
             }
             {
               precios?.map((p: PrecioMercadoTipo, idx) => (
                 <div key={`${idx}-bis`} className={estilo.slide}>
-                  <Image loading='lazy' className='mb-1' src={ICONO[p.icono] ?? ICONO.dolarIcono} height={30} width={30} alt='Ícono dólar'/>
-                  <div className="flex flex-col items-start leading-5">
-                    <span>${p.precio?.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}</span>
-                    <span className='font-bold'>{p.nombre}</span>
-                  </div>
+                  <PrecioConImagen precio={p} />
                 </div>
               ))
             }

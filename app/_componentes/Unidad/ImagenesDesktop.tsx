@@ -8,7 +8,7 @@ const ImagenesDesktop = ({ unidad }: { unidad: UnidadConMarcaCategoriaDetallesIm
 
   return (
     <div className='hidden md:flex gap-2'>
-      <div className='flex flex-col gap-2'>
+      <div className='flex flex-col gap-2 h-[70px]'>
         {
           unidad?.imagenes?.map((imagen, idx) => (
             <picture key={imagen.id}>
@@ -20,9 +20,9 @@ const ImagenesDesktop = ({ unidad }: { unidad: UnidadConMarcaCategoriaDetallesIm
               <Image
                 alt={imagen.textoAlt}
                 width={90}
-                height={90}
+                height={70}
                 src='https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/genericas/transparente-chica.svg'
-                className={`cursor-pointer rounded ${imagenPrimerPlano === idx ? 'border-2 border-color-marca' : ''} hover:border-2 hover:border-color-marca`}
+                className={`h-[70px] w-[90px] cursor-pointer rounded ${imagenPrimerPlano === idx ? 'border-2 border-color-marca' : ''} hover:border-2 hover:border-color-marca`}
                 onClick={() => setImagenPrimerPlano(idx)}
               />
             </picture>

@@ -1,7 +1,10 @@
 import { UnidadConMarcaCategoriaDetallesImagenes } from '@/app/_lib/tipos';
 import Carrusel from '../Carrusel';
 
-const ImagenesMobile = ({ unidad }: { unidad: UnidadConMarcaCategoriaDetallesImagenes }) => {
+const ImagenesMobile = (
+  { unidad, esDispositivoMovil = true }: 
+  { unidad: UnidadConMarcaCategoriaDetallesImagenes, esDispositivoMovil?: boolean }
+)=> {
   const items = unidad?.imagenes?.map(img => ({
     urlImagenDesktop: '',
     urlImagenMobile: img.urlMobile,
@@ -11,7 +14,7 @@ const ImagenesMobile = ({ unidad }: { unidad: UnidadConMarcaCategoriaDetallesIma
   return (
     <>
       <div className='flex md:hidden w-full my-4'>
-        <Carrusel items={items} autoscroll={false} />
+        <Carrusel items={items} autoscroll={false} esDispositivoMovil={esDispositivoMovil} />
       </div>
     </>
   );

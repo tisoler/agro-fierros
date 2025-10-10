@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recortador y Conversor de Imágenes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .upload-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            display: none;
+        }
+
+        .file-input-label {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s;
+            display: inline-block;
+        }
+
+        .file-input-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .step {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        .step h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .image-container {
+            max-width: 100%;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            display: block;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        input[type="number"],
+        input[type="range"] {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        input[type="range"] {
+            padding: 0;
+        }
+
+        .quality-value {
+            text-align: center;
+            font-weight: bold;
+            color: #667eea;
+            margin-top: 5px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        button.secondary {
+            background: #6c757d;
+        }
+
+        button.secondary:hover {
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+        }
+
+        .preview-image {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+        }
+
+        .info {
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            color: #666;
+            margin-top: 15px;
+        }
+
+        .info p {
+            margin: 5px 0;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖼️ Recortador y Conversor de Imágenes</h1>
+        
+        <div class="upload-section">
+            <div class="file-input-wrapper">
+                <input type="file" id="imageInput" accept="image/*">
+                <label for="imageInput" class="file-input-label">
+                    📁 Seleccionar Imagen
+                </label>
+            </div>
+        </div>
+
+        <!-- PASO 1: RECORTAR -->
+        <div class="step" id="step1">
+            <h2>Paso 1: Recortar Imagen</h2>
+            <div class="image-container">
+                <img id="image" src="">
+            </div>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label for="cropWidth">Ancho del recorte (px)</label>
+                    <input type="number" id="cropWidth" min="1" placeholder="Ancho">
+                </div>
+                <div class="control-group">
+                    <label for="cropHeight">Alto del recorte (px)</label>
+                    <input type="number" id="cropHeight" min="1" placeholder="Alto">
+                </div>
+            </div>
+            
+            <div class="info" id="cropInfo"></div>
+            
+            <div class="button-group">
+                <button id="cropBtn">✂️ Recortar</button>
+                <button id="skipCropBtn" class="secondary">⏭️ Saltar Recorte</button>
+            </div>
+        </div>
+
+        <!-- PASO 2: REDIMENSIONAR -->
+        <div class="step" id="step2">
+            <h2>Paso 2: Redimensionar (Manteniendo Proporción)</h2>
+            <img id="croppedPreview" class="preview-image" src="">
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label for="resizeWidth">Ancho (px)</label>
+                    <input type="number" id="resizeWidth" min="1">
+                </div>
+                <div class="control-group">
+                    <label for="resizeHeight">Alto (px)</label>
+                    <input type="number" id="resizeHeight" min="1">
+                </div>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="maintainAspect" checked>
+                <label for="maintainAspect">Mantener proporción de aspecto</label>
+            </div>
+            
+            <div class="info" id="resizeInfo"></div>
+            
+            <div class="button-group">
+                <button id="backToStep1" class="secondary">← Volver a Recortar</button>
+                <button id="applyResizeBtn">📐 Aplicar Tamaño</button>
+            </div>
+        </div>
+
+        <!-- PASO 3: CONVERTIR A WEBP -->
+        <div class="step" id="step3">
+            <h2>Paso 3: Convertir a WebP</h2>
+            <img id="resizedPreview" class="preview-image" src="">
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label for="quality">Calidad WebP (%)</label>
+                    <input type="range" id="quality" min="1" max="100" value="85">
+                    <div class="quality-value">85%</div>
+                </div>
+            </div>
+            
+            <div class="info" id="finalInfo"></div>
+            
+            <div class="button-group">
+                <button id="backToStep2" class="secondary">← Volver a Redimensionar</button>
+                <button id="convertWebPBtn">🎨 Convertir a WebP</button>
+            </div>
+        </div>
+
+        <!-- PASO 4: DESCARGAR -->
+        <div class="step" id="step4">
+            <h2>✅ Imagen Lista</h2>
+            <img id="finalPreview" class="preview-image" src="">
+            
+            <div class="info" id="downloadInfo"></div>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label for="fileName">Nombre del archivo</label>
+                    <input type="text" id="fileName" value="archivo.webp" style="padding: 10px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 14px;">
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button id="downloadBtn">💾 Descargar WebP</button>
+                <button id="startOverBtn" class="secondary">🔄 Comenzar de Nuevo</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script>
+        let cropper = null;
+        let croppedCanvas = null;
+        let resizedCanvas = null;
+        let finalBlob = null;
+        let originalAspectRatio = 1;
+
+        const imageInput = document.getElementById('imageInput');
+        const image = document.getElementById('image');
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const step3 = document.getElementById('step3');
+        const step4 = document.getElementById('step4');
+        
+        const cropWidth = document.getElementById('cropWidth');
+        const cropHeight = document.getElementById('cropHeight');
+        const cropInfo = document.getElementById('cropInfo');
+        const cropBtn = document.getElementById('cropBtn');
+        const skipCropBtn = document.getElementById('skipCropBtn');
+        const croppedPreview = document.getElementById('croppedPreview');
+        const resizeWidth = document.getElementById('resizeWidth');
+        const resizeHeight = document.getElementById('resizeHeight');
+        const maintainAspect = document.getElementById('maintainAspect');
+        const resizeInfo = document.getElementById('resizeInfo');
+        const applyResizeBtn = document.getElementById('applyResizeBtn');
+        const resizedPreview = document.getElementById('resizedPreview');
+        const qualitySlider = document.getElementById('quality');
+        const qualityValue = document.querySelector('.quality-value');
+        const finalInfo = document.getElementById('finalInfo');
+        const convertWebPBtn = document.getElementById('convertWebPBtn');
+        const finalPreview = document.getElementById('finalPreview');
+        const downloadInfo = document.getElementById('downloadInfo');
+        const fileName = document.getElementById('fileName');
+        const downloadBtn = document.getElementById('downloadBtn');
+        
+        const backToStep1 = document.getElementById('backToStep1');
+        const backToStep2 = document.getElementById('backToStep2');
+        const startOverBtn = document.getElementById('startOverBtn');
+
+        // Actualizar valor de calidad
+        qualitySlider.addEventListener('input', (e) => {
+            qualityValue.textContent = e.target.value + '%';
+        });
+
+        // Cargar imagen
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const imgData = event.target.result;
+                    
+                    const img = new Image();
+                    img.onload = function() {
+                        image.src = imgData;
+                        
+                        // Actualizar campos con dimensiones originales
+                        cropWidth.value = this.width;
+                        cropHeight.value = this.height;
+                        
+                        cropInfo.innerHTML = `
+                            <p><strong>Dimensiones originales:</strong> ${this.width} × ${this.height} px</p>
+                        `;
+                        
+                        step1.classList.add('active');
+                        step2.classList.remove('active');
+                        step3.classList.remove('active');
+                        step4.classList.remove('active');
+                        
+                        if (cropper) {
+                            cropper.destroy();
+                        }
+                        
+                        image.onload = function() {
+                            cropper = new Cropper(image, {
+                                aspectRatio: NaN,
+                                viewMode: 0,
+                                autoCropArea: 1,
+                                responsive: true,
+                                restore: false,
+                                guides: true,
+                                center: true,
+                                highlight: true,
+                                cropBoxMovable: true,
+                                cropBoxResizable: true,
+                                toggleDragModeOnDblclick: false,
+                                minCropBoxWidth: 10,
+                                minCropBoxHeight: 10,
+                            });
+                        };
+                    };
+                    img.src = imgData;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Recortar imagen
+        cropBtn.addEventListener('click', () => {
+            if (!cropper) return;
+            
+            const width = parseInt(cropWidth.value);
+            const height = parseInt(cropHeight.value);
+            
+            if (isNaN(width) || isNaN(height)) {
+                alert('Por favor ingresa dimensiones válidas');
+                return;
+            }
+            
+            croppedCanvas = cropper.getCroppedCanvas({
+                width: width,
+                height: height,
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high'
+            });
+            
+            goToStep2(croppedCanvas);
+        });
+
+        // Saltar recorte
+        skipCropBtn.addEventListener('click', () => {
+            if (!cropper) return;
+            
+            const width = parseInt(cropWidth.value);
+            const height = parseInt(cropHeight.value);
+            
+            if (isNaN(width) || isNaN(height)) {
+                alert('Por favor ingresa dimensiones válidas');
+                return;
+            }
+            
+            const canvas = cropper.getCroppedCanvas({
+                width: width,
+                height: height,
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high'
+            });
+            
+            croppedCanvas = canvas;
+            goToStep2(canvas);
+        });
+
+        function goToStep2(canvas) {
+            croppedPreview.src = canvas.toDataURL();
+            resizeWidth.value = canvas.width;
+            resizeHeight.value = canvas.height;
+            originalAspectRatio = canvas.width / canvas.height;
+            
+            updateResizeInfo(canvas.width, canvas.height);
+            
+            step1.classList.remove('active');
+            step2.classList.add('active');
+        }
+
+        // Mantener proporción al cambiar ancho
+        resizeWidth.addEventListener('input', (e) => {
+            if (maintainAspect.checked) {
+                const newWidth = parseInt(e.target.value);
+                if (!isNaN(newWidth)) {
+                    resizeHeight.value = Math.round(newWidth / originalAspectRatio);
+                }
+            }
+        });
+
+        // Mantener proporción al cambiar alto
+        resizeHeight.addEventListener('input', (e) => {
+            if (maintainAspect.checked) {
+                const newHeight = parseInt(e.target.value);
+                if (!isNaN(newHeight)) {
+                    resizeWidth.value = Math.round(newHeight * originalAspectRatio);
+                }
+            }
+        });
+
+        function updateResizeInfo(w, h) {
+            resizeInfo.innerHTML = `
+                <p><strong>Dimensiones actuales:</strong> ${w} × ${h} px</p>
+                <p><strong>Proporción:</strong> ${originalAspectRatio.toFixed(2)}</p>
+            `;
+        }
+
+        // Aplicar redimensionado
+        applyResizeBtn.addEventListener('click', () => {
+            const newWidth = parseInt(resizeWidth.value);
+            const newHeight = parseInt(resizeHeight.value);
+            
+            if (isNaN(newWidth) || isNaN(newHeight)) {
+                alert('Por favor ingresa dimensiones válidas');
+                return;
+            }
+            
+            resizedCanvas = document.createElement('canvas');
+            const ctx = resizedCanvas.getContext('2d');
+            resizedCanvas.width = newWidth;
+            resizedCanvas.height = newHeight;
+            
+            ctx.drawImage(croppedCanvas, 0, 0, newWidth, newHeight);
+            resizedPreview.src = resizedCanvas.toDataURL();
+            
+            finalInfo.innerHTML = `
+                <p><strong>Dimensiones finales:</strong> ${newWidth} × ${newHeight} px</p>
+            `;
+            
+            step2.classList.remove('active');
+            step3.classList.add('active');
+        });
+
+        // Convertir a WebP
+        convertWebPBtn.addEventListener('click', () => {
+            const quality = parseInt(qualitySlider.value) / 100;
+            
+            resizedCanvas.toBlob((blob) => {
+                finalBlob = blob;
+                const url = URL.createObjectURL(blob);
+                finalPreview.src = url;
+                
+                const sizeKB = (blob.size / 1024).toFixed(2);
+                downloadInfo.innerHTML = `
+                    <p><strong>Formato:</strong> WebP</p>
+                    <p><strong>Dimensiones:</strong> ${resizedCanvas.width} × ${resizedCanvas.height} px</p>
+                    <p><strong>Calidad:</strong> ${Math.round(quality * 100)}%</p>
+                    <p><strong>Tamaño:</strong> ${sizeKB} KB</p>
+                `;
+                
+                step3.classList.remove('active');
+                step4.classList.add('active');
+            }, 'image/webp', quality);
+        });
+
+        // Descargar
+        downloadBtn.addEventListener('click', () => {
+            if (!finalBlob) return;
+            
+            let name = fileName.value.trim();
+            
+            // Asegurar que tenga extensión .webp
+            if (!name.toLowerCase().endsWith('.webp')) {
+                name += '.webp';
+            }
+            
+            // Si está vacío, usar nombre por defecto
+            if (name === '.webp') {
+                name = 'archivo.webp';
+            }
+            
+            const url = URL.createObjectURL(finalBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        // Navegación entre pasos
+        backToStep1.addEventListener('click', () => {
+            step2.classList.remove('active');
+            step1.classList.add('active');
+        });
+
+        backToStep2.addEventListener('click', () => {
+            step3.classList.remove('active');
+            step2.classList.add('active');
+        });
+
+        startOverBtn.addEventListener('click', () => {
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+            step4.classList.remove('active');
+            imageInput.value = '';
+            finalBlob = null;
+        });
+    </script>
+</body>
+</html>

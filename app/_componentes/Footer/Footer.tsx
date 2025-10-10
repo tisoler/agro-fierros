@@ -36,9 +36,8 @@ const Footer = () => {
         <ul className='flex flex-col gap-2 text-2xl font-semibold text-white'>
           <li><Link href='/'>Inicio</Link></li>
           <li><Link href='/unidad'>Buscador de maquinarias y vehículos</Link></li>
-          <li><Link href='/categoria/maquinas-ombu'>Maquinaria Ombú</Link></li>
-          <li><Link href='/categoria/remolques'>Remolques</Link></li>
-          <li><Link href='/contacto'>Contacto</Link></li>
+          <li><Link href='/buscar?categoria=maquinas-ombu'>Maquinaria Ombú</Link></li>
+          <li><Link href='/buscar?categoria=remolques'>Remolques</Link></li>
         </ul>
       </section>
       <div className="grid grid-cols-2 auto-rows-auto gap-y-2 bg-white col-1 md:col-3 row-3 md:row-1 md:row-span-2 h-fit w-fit p-2 ml-auto">
