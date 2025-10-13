@@ -1,11 +1,9 @@
-import { obtenerMarcasParaCategoria } from "@/app/_lib/servicios";
+'use client';
+import { useContextoMarcas } from "@/app/_hooks/contextoMarcas";
 import FiltroMarcas from "./filtroMarcas";
 
-const FiltroMarcasContenedor = async (
-  { categoriaSlug, marcasSlug }:
-  { categoriaSlug: string[], marcasSlug: string[] }
-) => {
-  const marcas = await obtenerMarcasParaCategoria(categoriaSlug)();
+const FiltroMarcasContenedor = ({ marcasSlug }: { marcasSlug: string[] }) => {
+  const { marcas } = useContextoMarcas();
 
   return (
     <FiltroMarcas marcas={marcas || []} marcasSlug={marcasSlug} />

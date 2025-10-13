@@ -52,14 +52,14 @@ const Unidad = (
           <li key='title' className='flex justify-between items-center py-2'>
             <div className='flex gap-1 items-center'>
               <IconoHerramientas />
-              <span className='text-base xl:text-lg font-[500]'>Características</span>
+              <span className='text-lg font-[500]'>Características</span>
             </div>
             <a
               href={whatsappLink}
               title={WHATSAPP_BOTON_TEXTO}
               target="_blank"
               rel="noopener noreferrer"
-              className='inline-flex xl:w-[130px] h-[32px] gap-2 items-center rounded border-1 border-color-marca bg-color-marca text-white fill-white text-base lg:text-lg xl:text-xl font-bold hover:bg-white hover:text-color-marca hover:fill-color-marca active:bg-color-marca active:border-color-marca active:text-white active:fill-white px-3 py-[1px] cursor-pointer'
+              className='inline-flex xl:w-[130px] h-[32px] gap-2 items-center rounded border-1 border-color-marca bg-color-marca text-white fill-white text-xl font-bold hover:bg-white hover:text-color-marca hover:fill-color-marca active:bg-color-marca active:border-color-marca active:text-white active:fill-white px-3 py-[1px] cursor-pointer'
             >
               Consultar <WhatsAppIcono />
             </a>

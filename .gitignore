@@ -44,3 +44,5 @@ next-env.d.ts
 Dockerfile
 comandos-docker
 docker-compose.yml
+
+/app/api/revalidar

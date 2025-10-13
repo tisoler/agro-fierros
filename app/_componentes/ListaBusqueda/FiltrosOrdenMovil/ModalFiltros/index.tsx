@@ -17,7 +17,7 @@ const ModalFiltrosMovil = (
         <FiltroCategorias categoriaSlug={categoriaSlug} />
       </Suspense>
       <Suspense key={`${idCategoriasSlug}-${idMarcasSlug}`}  fallback={<SkeletonFiltroMarcas />}>
-        <FiltroMarcas categoriaSlug={categoriaSlug} marcasSlug={marcasSlug} />
+        <FiltroMarcas marcasSlug={marcasSlug} />
       </Suspense>
       <PieFiltros />
     </section>

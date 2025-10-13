@@ -1,12 +1,13 @@
 import { URL_PARAMETRO } from "@/app/_lib/constantes";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FormEvent } from "react";
+import { FormEvent, useEffect, useRef } from "react";
 import { IconoLupa } from "../../Iconos/Lupa";
 
 const BarraBusqueda = ({ mostrarBarra, alternarBarraCallback }: { mostrarBarra: boolean, alternarBarraCallback: (valor: boolean) => void }) => {
   const queryString = useSearchParams();
   const parametros = new URLSearchParams(queryString);
   const router = useRouter();
+  const inputBusquedaMovilRef = useRef<HTMLInputElement>(null);
 
   const buscarProductos = (e: FormEvent<HTMLFormElement>, esMovil = true) => {
     if (!e.target) return;
@@ -27,40 +28,45 @@ const BarraBusqueda = ({ mostrarBarra, alternarBarraCallback }: { mostrarBarra: 
     router.push(nuevoPath);
   };
 
-  const mostrarBarraBusquedaMovil = (e: FormEvent<HTMLFormElement>, esMovil = true) => {
+  const mostrarBarraBusquedaMovil = (e: FormEvent<HTMLFormElement>) => {
     if (!e.target) return;
     e.preventDefault();
 
-    if (esMovil) alternarBarraCallback(true);
+    alternarBarraCallback(true);
   };
+
+  useEffect(() => {
+    if (mostrarBarra && inputBusquedaMovilRef.current) inputBusquedaMovilRef.current.focus();
+  }, [mostrarBarra]);
 
   return (
     <>
-      <div className="hidden md:flex w-2/6 xl:w-[42%] bg-white/40 rounded-sm px-4">
+      <div className="hidden md:flex w-2/6 xl:w-[42%] bg-white rounded-sm px-4 shadow-sm drop-shadow-sm">
         <form onSubmit={(e) => buscarProductos(e, false)} className="flex w-full items-center">
           <input
             type="text"
             placeholder="Buscar..."
             name={URL_PARAMETRO.TERMINO}
-            className="w-full text-white placeholder-white/90 rounded-sm text-black text-xl outline-none"
+            className="w-full placeholder-neutral-600 rounded-sm text-neutral-800 text-xl outline-none"
             defaultValue={parametros.get(URL_PARAMETRO.TERMINO) || ''}
           />
           <button aria-label="Buscar" type="submit" className="ml-3 flex items-center justify-center py-2 cursor-pointer">
-            <IconoLupa color="#ffffff" />
+            <IconoLupa color="#eb1923" />
           </button>
         </form>
       </div>
-      <div className={`flex md:hidden items-center transition-all duration-300 ${mostrarBarra ? 'bg-white/40 w-full' : 'bg-color-marca'} rounded-sm px-3`}>
+      <div className={`flex md:hidden items-center transition-all duration-300 ${mostrarBarra ? 'bg-white w-full shadow-sm drop-shadow-sm' : 'bg-color-marca'} rounded-sm px-3`}>
         <form className="flex w-full items-center" onSubmit={!mostrarBarra ? mostrarBarraBusquedaMovil : buscarProductos}>
           <input
+            ref={inputBusquedaMovilRef}
             type="text"
             placeholder="Buscar..."
             name={URL_PARAMETRO.TERMINO}
-            className={`w-full rounded-sm placeholder-white/90 text-white text-xl outline-none ${mostrarBarra ? 'flex' : 'hidden'}`}
+            className={`w-full rounded-sm placeholder-neutral-600 text-neutral-800 text-xl outline-none ${mostrarBarra ? 'flex' : 'hidden'}`}
             defaultValue={parametros.get(URL_PARAMETRO.TERMINO) || ''}
           />
-          <button aria-label={mostrarBarra ? 'Buscar' : 'Desplegar buscador'} type="submit" className="ml-1 flex items-center justify-center p-1">
-            <IconoLupa color="#ffffff" />
+          <button aria-label={mostrarBarra ? 'Buscar' : 'Desplegar buscador'} type="submit" className="ml-1 flex items-center justify-center p-1 outline-none">
+            <IconoLupa color={mostrarBarra ? '#eb1923' : '#ffffff'} />
           </button>
         </form>
       </div>

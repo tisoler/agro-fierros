@@ -366,6 +366,7 @@ export const obtenerUnidadBusqueda = (
   );
 };
 
+// REMOVER SI NO SE VUELVE A USAR PRONTO
 export const obtenerMarcasParaCategoria = (categoriaSlug: string[]) => {
   const idCategoriasSlug = Array.isArray(categoriaSlug) && categoriaSlug?.length > 0 ?  categoriaSlug.sort((a, b) => a.localeCompare(b))?.join('&') : 'todas';
 

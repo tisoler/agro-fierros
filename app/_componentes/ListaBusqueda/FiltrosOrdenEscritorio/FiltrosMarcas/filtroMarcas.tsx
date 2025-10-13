@@ -30,26 +30,28 @@ const FiltrosMarcas = (
 
   return (
     <>
-      <ul className="flex flex-col text-xl p-3 bg-color-fondo-gris">
+      <div className="text-xl p-3 bg-color-fondo-gris">
         <h3 className="font-semibold mb-1">Marcas</h3>
-        {
-          deferredMarcas?.sort((a, b) => (a?.nombre || '').localeCompare(b?.nombre || ''))?.map(marca => (
-            <li key={marca?.id}>
-              <label className="flex items-center gap-2 cursor-pointer hover:bg-neutral-200 px-2 py-1 rounded text-lg">
-                <input
-                  title={`Filtrar por ${marca?.nombre}`}
-                  name={marca?.slug || ''}
-                  type='checkbox'
-                  className="cursor-pointer appearance-none w-4 h-4 border-[1.7px] border-neutral-500 focus:outline-none checked:bg-neutral-600"
-                  onChange={manejarClickMarca}
-                  checked={marcasSlug?.includes(marca?.slug || '') || false }
-                />
-                {marca?.nombre}
-              </label>
-            </li>
-          ))
-        }
-      </ul>
+        <ul>
+          {
+            deferredMarcas?.sort((a, b) => (a?.nombre || '').localeCompare(b?.nombre || ''))?.map(marca => (
+              <li key={marca?.id}>
+                <label className="flex items-center gap-2 cursor-pointer hover:bg-neutral-200 px-2 py-1 rounded text-lg">
+                  <input
+                    title={`Filtrar por ${marca?.nombre}`}
+                    name={marca?.slug || ''}
+                    type='checkbox'
+                    className="cursor-pointer appearance-none w-4 h-4 border-[1.7px] border-neutral-500 focus:outline-none checked:bg-neutral-600"
+                    onChange={manejarClickMarca}
+                    checked={marcasSlug?.includes(marca?.slug || '') || false }
+                  />
+                  {marca?.nombre}
+                </label>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
     </>
   );
 };

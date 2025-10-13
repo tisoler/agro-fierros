@@ -18,7 +18,7 @@ const FiltrosOrdenEscritorio = ({ categoriaSlug, marcasSlug, idCategoriasSlug }:
         <FiltroCategoriasEscritorio categoriaSlug={categoriaSlug} />
       </Suspense>
       <Suspense key={idCategoriasSlug} fallback={<SkeletonFiltroMarcas />}>
-        <FiltroMarcasEscritorio categoriaSlug={categoriaSlug} marcasSlug={marcasSlug} />
+        <FiltroMarcasEscritorio marcasSlug={marcasSlug} />
       </Suspense>
     </section>
   );

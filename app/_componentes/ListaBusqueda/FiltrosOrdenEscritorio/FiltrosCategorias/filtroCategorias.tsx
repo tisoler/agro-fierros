@@ -56,37 +56,39 @@ const FiltroCategorias = (
     router.push(nuevoPath);
   };
 
-  const dibujarArbolCategorias = (idCategoria: number, nivel = -1): React.ReactNode => {
-    const nuevoNivel = nivel + 1;
+  const dibujarArbolCategorias = (idCategoria: number, nivel = 0): React.ReactNode => {
+    const margenIzq = nivel > 0 ? '1rem' : '0';
     const categoriasHijas = arbolCategoriaEstado[idCategoria];
-    return (categoriasHijas?.flatMap(categoria => (
-      <div key={categoria.id}>
-        <li style={{ marginLeft: `${nuevoNivel}rem` }}> {/* // Incrementar margen izquierdo por nivel de profundidad */}
-          <label className="flex items-center gap-2 cursor-pointer hover:bg-neutral-200 px-2 py-1 rounded text-base">
-            <input
-              title={`Filtrar por ${categoria?.titulo}`}
-              type='checkbox'
-              className="cursor-pointer appearance-none w-4 h-4 border-[1.7px] border-neutral-500 focus:outline-none checked:bg-neutral-600"
-              onChange={(e) => manejarClickCategoria(e, categoria)}
-              checked={categoriaSlug?.includes(categoria?.slug || '') || false}
-            />
-            {categoria?.titulo}
-          </label>
-        </li>
-        {dibujarArbolCategorias(categoria.id, nuevoNivel)}
-      </div>
-    )));
+    return (
+      <ul>
+        {
+          categoriasHijas?.flatMap(categoria => (
+            <React.Fragment key={categoria.id}>
+              <li style={{ marginLeft: margenIzq }}> {/* // Incrementar margen izquierdo por nivel de profundidad */}
+                <label className="flex items-center gap-2 cursor-pointer hover:bg-neutral-200 px-2 py-1 rounded text-base">
+                  <input
+                    title={`Filtrar por ${categoria?.titulo}`}
+                    type='checkbox'
+                    className="cursor-pointer appearance-none w-4 h-4 border-[1.7px] border-neutral-500 focus:outline-none checked:bg-neutral-600"
+                    onChange={(e) => manejarClickCategoria(e, categoria)}
+                    checked={categoriaSlug?.includes(categoria?.slug || '') || false}
+                  />
+                  {categoria?.titulo}
+                </label>
+                { dibujarArbolCategorias(categoria.id, nivel + 1) }
+              </li>
+            </React.Fragment>
+          ))
+        }
+      </ul>
+    );
   };
 
   return (
-    <>
-      <ul className="flex flex-col text-xl p-3 bg-color-fondo-gris">
-        <h3 className="font-semibold mb-1">Categorías</h3>
-        {
-          dibujarArbolCategorias(-1)
-        }
-      </ul>
-    </>
+    <div className="flex flex-col text-xl p-3 bg-color-fondo-gris">
+      <h3 className="font-semibold mb-1">Categorías</h3>
+      { dibujarArbolCategorias(-1) }
+    </div>
   );
 };
 

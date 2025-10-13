@@ -35,7 +35,7 @@ const UnidadBuscador = (
       <div className="flex flex-col w-[calc(100%-180px)] md:w-full">
         <h2
           className="
-            flex flex-1 items-center justify-center text-center text-neutral-800 py-3 text-xl md:text-[22px] leading-6 min-h-[72px]
+            flex flex-1 items-center justify-center text-center text-neutral-800 py-3 text-[18px] md:text-[22px] leading-6 min-h-[72px]
             break-words px-2 py-3 line-clamp-2 border-x-[1.5px] border-x-neutral-200 border-t-[1.5px] border-t-neutral-200 md:border-t-0 wei font-semibold
           "
         >
