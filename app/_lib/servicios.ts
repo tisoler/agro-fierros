@@ -247,7 +247,7 @@ export const obtenerUnidadBusqueda = (
   const idMarcasSlug = Array.isArray(marcasSlug) && marcasSlug?.length > 0 ?  marcasSlug.sort((a, b) => a.localeCompare(b))?.join('&') : 'todas';
 
   return unstable_cache (
-    async (): Promise<UnidadConMarcaCategoria[] | null> => {
+    async (): Promise<{ unidadesFiltradas: UnidadConMarcaCategoria[], marcasFiltradas: MarcaTipo[] } | null> => {
       const categoriasString = categoriaSlug?.join(' | ') || '';
       const marcasString = marcasSlug?.join(' | ') || '';
       try {
@@ -267,9 +267,11 @@ export const obtenerUnidadBusqueda = (
             model: Marca, 
             as: 'marca', 
             attributes: ['id', 'nombre', 'slug'],
+            /*
             where: marcasSlug?.length ? {
               slug: { [Op.in]: marcasSlug },
             } : undefined,
+            */
             required: true,
           },
           { 
@@ -354,7 +356,16 @@ export const obtenerUnidadBusqueda = (
           console.error(`Error realizando búsqueda para: categorías ${categoriasString || 'ninguna'} y marcas ${marcasString || 'ninguna'} y orden ${ordenSlug || 'ninguno'} y término ${terminoSlug || 'ninguno'}`);
           throw new Error(`Error realizando búsqueda para: categorías ${categoriasString || 'ninguna'} y marcas ${marcasString || 'ninguna'} y orden ${ordenSlug || 'ninguno'} y término ${terminoSlug || 'ninguno'}`);
         };
-        return unidadesJson as UnidadConMarcaCategoria[];
+
+        // Filtramos por marcas en este punto y no en el SELECT (DB) para poder obtener todas las marcas correspondientes al criterio de búsqueda "término" + "categorías"
+        // De esta manera podemos seguir filtrando por otras marcas luego
+        // Se devuelven las unidades filtradas (también por marcas) y todas las marcas correspondientes
+        // Esto es para evitar replicar el filtro por término de búsqueda en obtenerMarcasParaCategoria
+        const unidadesFiltradas = marcasSlug?.length
+          ? unidadesJson.filter(u => marcasSlug.includes((u as UnidadConMarcaCategoria).marca.slug))
+          : unidadesJson;
+        const marcasFiltradas = [...(new Map((unidadesJson as UnidadConMarcaCategoria[])?.map(u => [u.marca.id, u.marca]))?.values() || [])];
+        return { unidadesFiltradas: unidadesFiltradas as UnidadConMarcaCategoria[],  marcasFiltradas};
       } catch {
         console.error(`Error realizando búsqueda para: categorías ${categoriasString || 'ninguna'} y marcas ${marcasString || 'ninguna'} y orden ${ordenSlug || 'ninguno'} y término ${terminoSlug || 'ninguno'}`);
         return null;

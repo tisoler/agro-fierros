@@ -7,7 +7,8 @@ import { UnidadConMarcaCategoria } from "@/app/_lib/tipos";
 
 const obtenerUnidadesParaCategorias = async (unidadActual: UnidadConMarcaCategoria,unidadesPrevias: UnidadConMarcaCategoria[], categoriaSlug: string[]): Promise<UnidadConMarcaCategoria[]> => {
   // Obtiene las unidades para categorías, filtra las existentes en unidadesPrevias y agrega las que falta para llegar a la cantidad esperada
-  let unidades = await obtenerUnidadBusqueda({ categoriaSlug })();
+  const resultado = await obtenerUnidadBusqueda({ categoriaSlug })();
+  let unidades = resultado?.unidadesFiltradas || [];
   unidades = unidades
     ?.filter(uni => !unidadesPrevias?.map(u => u.id)?.includes(uni.id) && unidadActual.id !== uni.id)
     ?.slice(0, CANTIDAD_UNIDADES_RELACIONADAS - unidadesPrevias.length)

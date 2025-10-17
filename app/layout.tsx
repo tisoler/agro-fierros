@@ -28,14 +28,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Fabio Tommasi | Agro',
     description: 'Concesionario agrícola: maquinaria nueva y usada, camiones, pick-ups, autos.',
-    images: ['/opengraph-image.jpg'],
+    images: ['https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/genericas/fabio-tommasi-agro.jpg'],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Fabio Tommasi | Agro',
     description: 'Concesionario agrícola: maquinaria nueva y usada, camiones, pick-ups, autos.',
     creator: '@tisoler',
-    images: ['/opengraph-image.jpg'],
+    images: ['https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/genericas/fabio-tommasi-agro.jpg'],
   },
   verification: {
     google: 'google',
