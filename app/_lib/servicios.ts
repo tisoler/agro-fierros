@@ -7,27 +7,61 @@ import { CategoriaTipo, MarcaTipo, PrecioMercadoTipo, UnidadConMarca, UnidadConM
 import { UnidadImagen } from "../_modelos/unidadImagen";
 import { UnidadDetalle } from "../_modelos/unidadDetalle";
 import { Op, Order } from "sequelize";
+import { MAIZ, SOJA, TRIGO, USD_BLUE, USD_OFICIAL } from "./constantes";
 
 export const obtenerPrecios = unstable_cache(
   async (): Promise<PrecioMercadoTipo[]> => {
-    /*
-    const response = await fetch('https://dolarapi.com/v1/dolares')
-    if (!response.ok) {
-      return [
-        { nombre: 'Dólar Oficial', precio: 0, icono: 'dolarIcono' }, 
-        { nombre: 'Dólar Blue', precio: 0, icono: 'dolarIcono'  }
-      ];
+    // DÓLAR desde API
+    const respDolar = await fetch('https://dolarapi.com/v1/dolares');
+    let dolares = [];
+    if (!respDolar.ok) {
+      console.error('Error obteniendo dólares desde dolarapi.');
     }
 
-    const data = await response.json() as Record<string, string>[];
-    const dolarOficial = data.find(d => d.casa === 'oficial')?.venta;
-    const dolarBlue = data.find(d => d.casa === 'blue')?.venta;
+    const dataDolar = await respDolar.json() as Record<string, string>[];
+    const dolarOficial = dataDolar.find(d => d.casa === 'oficial')?.venta;
+    const dolarBlue = dataDolar.find(d => d.casa === 'blue')?.venta;
 
-    return [
-      { nombre: 'Dólar Oficial', precio: isNaN(Number(dolarOficial)) ? 0 : Number(dolarOficial), icono: 'dolarIcono' },
-      { nombre: 'Dólar Blue', precio: isNaN(Number(dolarBlue)) ? 0 : Number(dolarBlue), icono: 'dolarIcono' }
+    dolares = [
+      {
+        nombre: USD_OFICIAL,
+        precio: isNaN(Number(dolarOficial)) ? 0 : Number(dolarOficial),
+        activo: true,
+        icono: 'dolarIcono'
+      },
+      {
+        nombre: USD_BLUE,
+        precio: isNaN(Number(dolarBlue)) ? 0 : Number(dolarBlue),
+        activo: true,
+        icono: 'dolarIcono'
+      },
     ];
-    */
+
+    // PRECIO CEREALEA desde API
+    const respCereales = await fetch('https://api-cotizaciones.agrofy.com.ar/api/BoardPrices/GetBoardPricesHome');
+    if (!respCereales.ok) {
+      console.error('Error obteniendo precios de cereales desde dolarapi.');
+    }
+    const dataCereales = await respCereales.json() as { Productos: { Producto: string, Mercados: { Nombre: string, Precio: string }[]}[] }[];
+    if (!dataCereales?.length && dataCereales[0]?.Productos) {
+      console.error('Error obteniendo precios de cereales desde dolarapi - No hay productos.');
+    }
+    const preciosCereales = dataCereales[0]?.Productos
+      ?.filter(cereal => [TRIGO, SOJA, 'Maiz'].includes(cereal.Producto))
+      ?.map(cereal => {
+        const nombre = cereal.Producto === TRIGO ? TRIGO : cereal.Producto === 'Maiz' ? MAIZ : SOJA;
+        const icono = cereal.Producto === TRIGO ? 'trigoIcono' : cereal.Producto === 'Maiz' ? 'maizIcono' : 'sojaIcono';
+        const precio = cereal.Mercados?.find(mercado => mercado.Nombre === 'Rosario')?.Precio?.replaceAll('.', '').replaceAll(',00', '') || 0;
+
+        return ({
+          nombre: nombre,
+          precio: isNaN(Number(precio)) ? 0 : Number(precio),
+          activo: true,
+          icono,
+        })}
+      ) || [];
+  
+    // fallback
     await initPrecioMercado();
     try {
       const precios = await PrecioMercado.findAll({
@@ -36,7 +70,21 @@ export const obtenerPrecios = unstable_cache(
       });
 
       if (!precios?.length) return [];
-      return precios.map(precio => precio.get({ plain: true }));
+      const preciosPlano = precios.map(precio => {
+        if (precio.nombre === USD_OFICIAL && dolares?.some(d => d.nombre === USD_OFICIAL)) {
+          return dolares.find(d => d.nombre === USD_OFICIAL) as PrecioMercadoTipo;
+        } else if (precio.nombre === USD_BLUE && dolares?.some(d => d.nombre === USD_BLUE)) {
+          return dolares.find(d => d.nombre === USD_BLUE) as PrecioMercadoTipo;
+        } else if (precio.nombre === TRIGO && preciosCereales?.some(d => d.nombre === TRIGO)) {
+          return preciosCereales.find(d => d.nombre === TRIGO) as PrecioMercadoTipo;
+        } else if (precio.nombre === SOJA && preciosCereales?.some(d => d.nombre === SOJA)) {
+          return preciosCereales.find(d => d.nombre === SOJA) as PrecioMercadoTipo;
+        } else if (precio.nombre === MAIZ && preciosCereales?.some(d => d.nombre === MAIZ)) {
+          return preciosCereales.find(d => d.nombre === MAIZ) as PrecioMercadoTipo;
+        }
+        return precio.get({ plain: true })
+      });
+      return preciosPlano;
     } catch {
       console.error('Error obteniendo precios de mercado');
       return [];

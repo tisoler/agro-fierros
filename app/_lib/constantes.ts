@@ -20,3 +20,9 @@ export enum OPCIONES_ORDEN {
 export const OPCION_ORDEN_DEFECTO = 'ninguno';
 
 export const CANTIDAD_UNIDADES_RELACIONADAS = 7;
+
+export const USD_OFICIAL = 'USD oficial';
+export const USD_BLUE = 'USD blue';
+export const TRIGO = 'Trigo';
+export const SOJA = 'Soja';
+export const MAIZ = 'Maíz';

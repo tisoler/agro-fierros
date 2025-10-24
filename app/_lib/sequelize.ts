@@ -23,15 +23,15 @@ export default class DataBaseConnection {
           idle: 10000
         },
       });
-    };
 
-    try {
-      await DataBaseConnection.sequelize.authenticate();
-      console.log('DB connection has been established successfully.');
-    } catch (error) {
-      console.error('Unable to connect to the database:', error);
-      throw Error(`Unable to connect to the database: ${error}`);
-    }
+      try {
+        await DataBaseConnection.sequelize.authenticate();
+        console.log('DB connection has been established successfully.');
+      } catch (error) {
+        console.error('Unable to connect to the database:', error);
+        throw Error(`Unable to connect to the database: ${error}`);
+      }
+    };
 
     return DataBaseConnection.sequelize
   }
