@@ -19,7 +19,7 @@ export async function POST (request: NextRequest) {
   // Revalidar por tags
   if (tags && Array.isArray(tags)) {
     tags.forEach(tag => {
-      revalidateTag(tag);
+      revalidateTag(tag, 'max');
       console.log(`Revalidated tag: ${tag}`);
     });
   }

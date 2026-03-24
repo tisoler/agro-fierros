@@ -7,9 +7,9 @@ import { cdnLoader } from "@/app/_lib/utilidades";
 
 const UnidadTarjeta = (
   { unidad, esDispositivoMovil = true, priorizar }:
-  { unidad: UnidadConMarca, esDispositivoMovil?: boolean, priorizar?: boolean }
+    { unidad: UnidadConMarca, esDispositivoMovil?: boolean, priorizar?: boolean }
 ) => {
-  const dimensions = esDispositivoMovil 
+  const dimensions = esDispositivoMovil
     ? { width: 240, height: 220 }  // iPhone promedio 4:5
     : { width: 280, height: 250 };
 
@@ -52,7 +52,7 @@ const UnidadTarjeta = (
           {unidad.marca?.nombre || ''}
         </div>
       </div>
-      <div className="flex justify-center items-center bg-color-marca md:bg-[#211e1e] group-hover:bg-color-marca text-white py-2 text-xl md:text-lg font-bold md:font-semibold">Ver más</div>
+      <div className="flex justify-center items-center bg-color-marca md:bg-[#1E293B] group-hover:bg-color-marca text-white py-2 text-xl md:text-lg font-bold md:font-semibold">Ver más</div>
     </Link>
   );
 };

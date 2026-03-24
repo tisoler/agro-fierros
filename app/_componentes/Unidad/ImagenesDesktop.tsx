@@ -21,7 +21,7 @@ const ImagenesDesktop = ({ unidad }: { unidad: UnidadConMarcaCategoriaDetallesIm
                 alt={imagen.textoAlt}
                 width={90}
                 height={70}
-                src='https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/genericas/transparente-chica.svg'
+                src='https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/genericas/transparente-chica.svg'
                 className={`h-[70px] w-[90px] cursor-pointer rounded ${imagenPrimerPlano === idx ? 'border-2 border-color-marca' : ''} hover:border-2 hover:border-color-marca`}
                 onClick={() => setImagenPrimerPlano(idx)}
               />
@@ -38,7 +38,7 @@ const ImagenesDesktop = ({ unidad }: { unidad: UnidadConMarcaCategoriaDetallesIm
         <Image
           loading='eager'
           priority
-          src="https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/genericas/transparente-chica.svg"
+          src="https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/genericas/transparente-chica.svg"
           alt={unidad?.titulo || 'Unidad'}
           height={490}
           width={640}

@@ -13,10 +13,10 @@ const CarruselUnidadesContenedor = async (
       {
         variante === 'grande' && (
           <Image
-            src={'https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/genericas/logo-rojo.svg'}
+            src={'https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/genericas/logo-rojo.svg'}
             loading={`${priorizar ? 'eager' : 'lazy'}`}
             priority={priorizar}
-            alt="Logo Fabio Tommasi Agro"
+            alt="Logo AgroFierros"
             width={25}
             height={25}
             className="ml-1"

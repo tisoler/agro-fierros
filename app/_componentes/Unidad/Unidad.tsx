@@ -11,7 +11,7 @@ const Unidad = (
   { unidad: UnidadConMarcaCategoriaDetallesImagenes, esDispositivoMovil?: boolean }
 ) => {
   const mensajeWhatsApp = `${WHATSAPP_MENSAJE_UNIDAD} ${unidad.titulo}.
-    https://fabiotommasiagro.com.ar/${unidad.slug}
+    https://agrofierros.com.ar/${unidad.slug}
   `;
   const whatsappLink = `https://wa.me/${WHATSAPP_NUMERO}?text=${mensajeWhatsApp}`;
 

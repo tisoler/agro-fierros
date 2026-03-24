@@ -30,8 +30,8 @@ const ComponenteHome = async () => {
   const esDispositivoMovil = userAgentFromString(userAgent || undefined)?.device?.type === 'mobile';
 
   const itemsCarruselPrincipal = new Array(4).fill(0).map((_, idx) => ({
-    urlImagenDesktop: `https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/productos/producto-destacado-${idx + 1}-desktop.webp`,
-    urlImagenMobile: `https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/productos/producto-destacado-${idx + 1}.webp`,
+    urlImagenDesktop: `https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/productos/producto-destacado-${idx + 1}-desktop.webp`,
+    urlImagenMobile: `https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/productos/producto-destacado-${idx + 1}.webp`,
     textoAlt: `Producto destacado ${idx + 1}`,
   }));
 

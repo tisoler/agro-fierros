@@ -9,57 +9,93 @@ import { UnidadDetalle } from "../_modelos/unidadDetalle";
 import { Op, Order } from "sequelize";
 import { MAIZ, SOJA, TRIGO, USD_BLUE, USD_OFICIAL } from "./constantes";
 
+const obtenerPreciosDolar = unstable_cache(
+  async (): Promise<PrecioMercadoTipo[]> => {
+    // DÓLAR desde API
+    let dolares: PrecioMercadoTipo[] = [];
+    try {
+      const respDolar = await fetch('https://dolarapi.com/v1/dolares');
+      if (!respDolar.ok) {
+        console.error('Error obteniendo dólares desde dolarapi.');
+      }
+
+      const dataDolar = await respDolar.json() as Record<string, string>[];
+      const dolarOficial = dataDolar.find(d => d.casa === 'oficial')?.venta;
+      const dolarBlue = dataDolar.find(d => d.casa === 'blue')?.venta;
+
+      dolares = [
+        {
+          id: 1,
+          nombre: USD_OFICIAL,
+          precio: isNaN(Number(dolarOficial)) ? 0 : Number(dolarOficial),
+          activo: true,
+          icono: 'dolarIcono'
+        },
+        {
+          id: 2,
+          nombre: USD_BLUE,
+          precio: isNaN(Number(dolarBlue)) ? 0 : Number(dolarBlue),
+          activo: true,
+          icono: 'dolarIcono'
+        },
+      ];
+    } catch (e) {
+      console.error('Error obteniendo dólares desde dolarapi.', e);
+    }
+
+    return dolares;
+  },
+  ['precios-dolar'],
+  { revalidate: 1800, tags: ['precios-dolar'] } // revalidar cada media hora
+);
+
+const obtenerPreciosCerelaes = unstable_cache(
+  async (): Promise<PrecioMercadoTipo[]> => {
+    // PRECIO CEREALEA desde API
+    let preciosCereales: PrecioMercadoTipo[] = [];
+    try {
+      const respCereales = await fetch(
+        'https://api.scrapingant.com/v2/general?url=https%3A%2F%2Fapi-cotizaciones.agrofy.com.ar%2Fapi%2FBoardPrices%2FGetBoardPricesHome&x-api-key=14386fc4e4b541be86dba7e78b7a7e12&proxy_type=residential&return_page_source=true'
+      );
+      if (!respCereales.ok) {
+        console.error('Error obteniendo precios de cereales desde agrofy.');
+      }
+      const dataCereales = await respCereales.json() as { Productos: { Producto: string, Mercados: { Nombre: string, Precio: string }[]}[] }[];
+      if (!dataCereales?.length && dataCereales[0]?.Productos) {
+        console.error('Error obteniendo precios de cereales desde agrofy - No hay productos.');
+      }
+      preciosCereales = dataCereales[0]?.Productos
+        ?.filter(cereal => [TRIGO, SOJA, 'Maiz'].includes(cereal.Producto))
+        ?.map((cereal, idx) => {
+          const nombre = cereal.Producto === TRIGO ? TRIGO : cereal.Producto === 'Maiz' ? MAIZ : SOJA;
+          const icono = cereal.Producto === TRIGO ? 'trigoIcono' : cereal.Producto === 'Maiz' ? 'maizIcono' : 'sojaIcono';
+          const precio = cereal.Mercados?.find(mercado => mercado.Nombre === 'Rosario')?.Precio?.replaceAll('.', '').replaceAll(',00', '') || 0;
+
+          return ({
+            id: 3 + idx,
+            nombre: nombre,
+            precio: isNaN(Number(precio)) ? 0 : Number(precio),
+            activo: true,
+            icono,
+          })}
+        ) || [];
+    } catch (e) {
+      console.error('Error obteniendo precios de cereales desde agrofy.', e);
+    }
+
+    return preciosCereales;
+  },
+  ['precios-cereales'],
+  { revalidate: 10800, tags: ['precios-cereales'] } // revalidar cada 3 horas
+);
+
 export const obtenerPrecios = unstable_cache(
   async (): Promise<PrecioMercadoTipo[]> => {
     // DÓLAR desde API
-    const respDolar = await fetch('https://dolarapi.com/v1/dolares');
-    let dolares = [];
-    if (!respDolar.ok) {
-      console.error('Error obteniendo dólares desde dolarapi.');
-    }
-
-    const dataDolar = await respDolar.json() as Record<string, string>[];
-    const dolarOficial = dataDolar.find(d => d.casa === 'oficial')?.venta;
-    const dolarBlue = dataDolar.find(d => d.casa === 'blue')?.venta;
-
-    dolares = [
-      {
-        nombre: USD_OFICIAL,
-        precio: isNaN(Number(dolarOficial)) ? 0 : Number(dolarOficial),
-        activo: true,
-        icono: 'dolarIcono'
-      },
-      {
-        nombre: USD_BLUE,
-        precio: isNaN(Number(dolarBlue)) ? 0 : Number(dolarBlue),
-        activo: true,
-        icono: 'dolarIcono'
-      },
-    ];
+    const dolares: PrecioMercadoTipo[] = await obtenerPreciosDolar();
 
     // PRECIO CEREALEA desde API
-    const respCereales = await fetch('https://api-cotizaciones.agrofy.com.ar/api/BoardPrices/GetBoardPricesHome');
-    if (!respCereales.ok) {
-      console.error('Error obteniendo precios de cereales desde dolarapi.');
-    }
-    const dataCereales = await respCereales.json() as { Productos: { Producto: string, Mercados: { Nombre: string, Precio: string }[]}[] }[];
-    if (!dataCereales?.length && dataCereales[0]?.Productos) {
-      console.error('Error obteniendo precios de cereales desde dolarapi - No hay productos.');
-    }
-    const preciosCereales = dataCereales[0]?.Productos
-      ?.filter(cereal => [TRIGO, SOJA, 'Maiz'].includes(cereal.Producto))
-      ?.map(cereal => {
-        const nombre = cereal.Producto === TRIGO ? TRIGO : cereal.Producto === 'Maiz' ? MAIZ : SOJA;
-        const icono = cereal.Producto === TRIGO ? 'trigoIcono' : cereal.Producto === 'Maiz' ? 'maizIcono' : 'sojaIcono';
-        const precio = cereal.Mercados?.find(mercado => mercado.Nombre === 'Rosario')?.Precio?.replaceAll('.', '').replaceAll(',00', '') || 0;
-
-        return ({
-          nombre: nombre,
-          precio: isNaN(Number(precio)) ? 0 : Number(precio),
-          activo: true,
-          icono,
-        })}
-      ) || [];
+    const preciosCereales: PrecioMercadoTipo[] = await obtenerPreciosCerelaes();
   
     // fallback
     await initPrecioMercado();
@@ -91,7 +127,7 @@ export const obtenerPrecios = unstable_cache(
     }
   },
   ['precios-mercado'],
-  { revalidate: 3600, tags: ['precios-mercado'] } // revalidar cada 1 hora
+  { revalidate: 1800, tags: ['precios-mercado'] } // revalidar cada media hora
 );
 
 export const obtenerCategorias = unstable_cache(

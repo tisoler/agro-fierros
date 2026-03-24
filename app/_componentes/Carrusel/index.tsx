@@ -72,7 +72,7 @@ const Carrusel: React.FC<HorizontalScrollerProps> = ({
     });
   };
 
-  function smoothScrollTo (
+  function smoothScrollTo(
     element: HTMLDivElement,
     targetX: number,
     duration = 0.3,
@@ -172,7 +172,7 @@ const Carrusel: React.FC<HorizontalScrollerProps> = ({
     }
   };
 
-  const dimensions = esDispositivoMovil 
+  const dimensions = esDispositivoMovil
     ? { width: 400, height: 500 }  // iPhone promedio 4:5
     : { width: 1470, height: 430 };
 
@@ -192,7 +192,7 @@ const Carrusel: React.FC<HorizontalScrollerProps> = ({
         onTouchEnd={handleEnd}
       >
         {
-          items?.map((item, idx) => 
+          items?.map((item, idx) =>
             <div
               key={idx + 1}
               className="relative shrink-0 md:snap-start aspect-[4/5] md:aspect-auto md:h-[430px] w-full"
@@ -204,7 +204,7 @@ const Carrusel: React.FC<HorizontalScrollerProps> = ({
                   priority
                   loading="eager"
                   fetchPriority={idx === 0 ? 'high' : 'auto'}
-                  src="https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/genericas/transparente-chica.svg"
+                  src="https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/genericas/transparente-chica.svg"
                   alt={item.textoAlt}
                   width={dimensions.width}
                   height={dimensions.height}
@@ -226,11 +226,10 @@ const Carrusel: React.FC<HorizontalScrollerProps> = ({
             id={`bullet-${index}`}
             key={index}
             onClick={() => swipeSlide(index)}
-            className={`w-[8px] md:w-[10px] h-[8px] md:h-[10px] rounded-full cursor-pointer ${
-              currentIndexRef.current === index
-                ? 'bg-color-marca'
-                : 'bg-color-sec-marca'
-            }`}
+            className={`w-[8px] md:w-[10px] h-[8px] md:h-[10px] rounded-full cursor-pointer ${currentIndexRef.current === index
+              ? 'bg-color-marca'
+              : 'bg-color-sec-marca'
+              }`}
             aria-label={`Go to video ${index + 1}`}
           />
         ))}

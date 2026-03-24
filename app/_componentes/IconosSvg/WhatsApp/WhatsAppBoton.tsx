@@ -22,7 +22,7 @@ const WhatsAppBoton = ({ fijo = false, mensaje, dimension = 'grande' }: WhatsApp
   return (
     <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
       <button className={`${fijo ? "fixed z-50 outline-none cursor-pointer right-1 bottom-[15vh] md:right-2 md:bottom-[20vh]" : "block"} ${anchoMobil} ${ancho} ${altoMobil} ${alto} ${padding} rounded-full bg-green-500 text-white hover:bg-green-600`}>
-        <Image width={70} height={70} className="object-cover" alt='Consultar por WhatsApp' src={`https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/genericas/whatsapp.svg`} priority loading='eager' />
+        <Image width={70} height={70} className="object-cover" alt='Consultar por WhatsApp' src={`https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/genericas/whatsapp.svg`} priority loading='eager' />
       </button>
     </a>
   );

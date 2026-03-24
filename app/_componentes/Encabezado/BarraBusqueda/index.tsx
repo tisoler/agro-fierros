@@ -41,7 +41,7 @@ const BarraBusqueda = ({ mostrarBarra, alternarBarraCallback }: { mostrarBarra: 
 
   return (
     <>
-      <div className="hidden md:flex w-2/6 xl:w-[42%] bg-white rounded-sm px-4 shadow-sm drop-shadow-sm">
+      <div className="hidden md:flex w-4/6 bg-white rounded-sm px-4 shadow-sm drop-shadow-sm">
         <form onSubmit={(e) => buscarProductos(e, false)} className="flex w-full items-center">
           <input
             type="text"
@@ -51,7 +51,7 @@ const BarraBusqueda = ({ mostrarBarra, alternarBarraCallback }: { mostrarBarra: 
             defaultValue={parametros.get(URL_PARAMETRO.TERMINO) || ''}
           />
           <button aria-label="Buscar" type="submit" className="ml-3 flex items-center justify-center py-2 cursor-pointer">
-            <IconoLupa color="#eb1923" />
+            <IconoLupa color="#EA580C" />
           </button>
         </form>
       </div>
@@ -66,7 +66,7 @@ const BarraBusqueda = ({ mostrarBarra, alternarBarraCallback }: { mostrarBarra: 
             defaultValue={parametros.get(URL_PARAMETRO.TERMINO) || ''}
           />
           <button aria-label={mostrarBarra ? 'Buscar' : 'Desplegar buscador'} type="submit" className="ml-1 flex items-center justify-center p-1 outline-none">
-            <IconoLupa color={mostrarBarra ? '#eb1923' : '#ffffff'} />
+            <IconoLupa color={mostrarBarra ? '#EA580C' : '#ffffff'} />
           </button>
         </form>
       </div>

@@ -59,8 +59,8 @@
       const resultado = document.getElementById('resultadoSQLImagenes');
       let query = 'INSERT INTO unidadImagenes (`idUnidad`,`urlEscritorio`,`urlMobile`,`urlMini`,`textoAlt`) VALUES';
       new Array(Number(cantidad)).fill(null).forEach((_, idx) => {
-        const urlComun = `https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/productos/${carpeta}/${idUnidad}/${idx + 1}.webp`;
-        const urlMini = `https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/productos/${carpeta}/${idUnidad}/${idx + 1}-mini.webp`;
+        const urlComun = `https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/productos/${carpeta}/${idUnidad}/${idx + 1}.webp`;
+        const urlMini = `https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/productos/${carpeta}/${idUnidad}/${idx + 1}-mini.webp`;
         const textoAlt = `SELECT titulo FROM unidades WHERE id = ${idUnidad}`;
          query +=` (${idUnidad},'${urlComun}','${urlComun}','${urlMini}','${textoAlt}'),`
       });

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Afacad_Flux, Geist_Mono,  } from 'next/font/google';
+import { Afacad_Flux, Geist_Mono, } from 'next/font/google';
 import { GoogleTagManager } from '@next/third-parties/google';
 import './globals.css';
 import { Encabezado } from './_componentes/Encabezado/encabezado';
@@ -22,20 +22,20 @@ const afacadFlux = Afacad_Flux({
 });
 
 export const metadata: Metadata = {
-  title: 'Fabio Tommasi | Agro',
+  title: 'AgroFierros',
   description: 'Concesionario agrícola: maquinaria nueva y usada, camiones, pick-ups, autos.',
-  metadataBase: new URL('https://fabiotommasi.com.ar'),
+  metadataBase: new URL('https://agrofierros.com.ar'),
   openGraph: {
-    title: 'Fabio Tommasi | Agro',
+    title: 'AgroFierros',
     description: 'Concesionario agrícola: maquinaria nueva y usada, camiones, pick-ups, autos.',
-    images: ['https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/genericas/fabio-tommasi-agro.jpg'],
+    images: ['https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/genericas/agro-fierros.jpg'],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Fabio Tommasi | Agro',
+    title: 'AgroFierros',
     description: 'Concesionario agrícola: maquinaria nueva y usada, camiones, pick-ups, autos.',
     creator: '@tisoler',
-    images: ['https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrotommasi/genericas/fabio-tommasi-agro.jpg'],
+    images: ['https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/genericas/agro-fierros.jpg'],
   },
   verification: {
     google: 'google',
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     yahoo: 'yahoo',
   },
   generator: 'Next.js',
-  applicationName: 'fabioTommasiAgro',
+  applicationName: 'agrofierros',
   authors: [{ name: 'Tisoler', url: 'https://github.com/tisoler' }],
   robots: {
     index: true,

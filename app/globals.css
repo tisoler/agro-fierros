@@ -2,22 +2,28 @@
 
 :root {
   --background: #e6e5e5;
-  --foreground: #171717;  /* Font family definitions */
+  --foreground: #171717;
+  /* Font family definitions */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-color-marca: #eb1923;
-  --color-color-sec-marca: #babdbf;
+  --color-color-marca: #EA580C;
+  --color-color-sec-marca: #1E293B;
   --color-color-fondo-gris: #F3F3F3;
   --breakpoint-xs: 375px;
   --animate-sweep: sweep 2s ease-in-out infinite;
 }
 
 @keyframes sweep {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(200%); }
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(200%);
+  }
 }
 
 @media (prefers-color-scheme: dark) {
