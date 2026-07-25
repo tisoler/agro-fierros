@@ -1,5 +1,5 @@
 import Image from "next/image";
-import CarruselUnidades from "./carruselUnidades";
+import CarruselUnidades from "./CarruselUnidades";
 import { CarruselUnidadesProps } from "@/app/_lib/tipos";
 
 const CarruselUnidadesContenedor = async (
