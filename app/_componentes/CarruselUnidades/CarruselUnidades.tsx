@@ -4,11 +4,10 @@ import estilo from './carruselUnidades.module.css';
 import BotonIzquierda from "../BotonIzquierda";
 import BotonDerecha from "../BotonDerecha";
 import { UnidadConMarca } from "@/app/_lib/tipos";
-import UnidadTarjeta from "./carruselUnidad";
+import UnidadTarjeta from "./CarruselUnidad";
 
-const CarruselUnidades = ({ unidades, esDispositivoMovil = true, priorizar = false }: 
-  { unidades: UnidadConMarca[], esDispositivoMovil?: boolean, priorizar?: boolean }) => 
-{
+const CarruselUnidades = ({ unidades, esDispositivoMovil = true, priorizar = false }:
+  { unidades: UnidadConMarca[], esDispositivoMovil?: boolean, priorizar?: boolean }) => {
   let startX: number;
   let scrollLeft: number;
   const carruselRef = React.useRef<HTMLDivElement>(null);
