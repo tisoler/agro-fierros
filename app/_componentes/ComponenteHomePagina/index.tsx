@@ -3,7 +3,6 @@ import { headers } from 'next/headers'
 import { userAgentFromString } from 'next/server';
 import dynamic from "next/dynamic";
 import Carrusel from "../Carrusel";
-import CarruselUnidades from "../CarruselUnidades";
 import SkeletonCarrusel from "../Skeletons/Carrusel";
 import SkeletonCarruselUnidades from "../Skeletons/CarruselUnidades";
 import SkeletonListaCategorias from "../Skeletons/ListaCategorias";

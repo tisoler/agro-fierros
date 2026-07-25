@@ -1,4 +1,3 @@
-import React from "react";
 import Image from "next/image";
 import CarruselUnidades from "./carruselUnidades";
 import { CarruselUnidadesProps } from "@/app/_lib/tipos";
