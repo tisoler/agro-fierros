@@ -4,13 +4,20 @@ const nextConfig: NextConfig = {
   /* config options here */
   output: 'standalone',
   images: {
-    domains: ["tisolercdn.nyc3.cdn.digitaloceanspaces.com",
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'tisolercdn.nyc3.cdn.digitaloceanspaces.com',
+      },
     ],
     formats: ['image/avif', 'image/webp'], // AVIF first as it's more efficient
     minimumCacheTTL: 2592000, // 30 días en segundos
     qualities: [25, 50, 75, 85, 90],
   },
   reactStrictMode: true,
+  turbopack: {
+    root: __dirname, // repo root explícito (evita que infiera el workspace incorrectamente)
+  },
   experimental: {
     inlineCss: true,
   },
