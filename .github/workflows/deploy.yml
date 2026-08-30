@@ -17,8 +17,10 @@ jobs:
           key: ${{ secrets.DROPLET_SSH_KEY }}
           port: ${{ secrets.DROPLET_PORT || 22 }}
           script: |
+            set -e
             cd /var/www/agro-fierros/agro-fierros-prod
             git pull origin main
             docker compose build
-            docker compose up -d
+            docker compose up -d --wait
             docker image prune -f
+            bash ScriptCopiarSpace/scriptSpace.sh
