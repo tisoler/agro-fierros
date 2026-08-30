@@ -22,25 +22,25 @@ const afacadFlux = Afacad_Flux({
 });
 
 export const metadata: Metadata = {
-  title: 'AgroFierros',
-  description: 'Concesionario agrícola: maquinaria nueva y usada, camiones, pick-ups, autos.',
+  title: {
+    default: 'AgroFierros | Maquinaria agrícola nueva y usada en la zona centro de Argentina',
+    template: '%s | AgroFierros',
+  },
+  description: 'Portal de venta de maquinaria agrícola nueva y usada, camiones, pick-ups y autos en la zona centro de Argentina. Publicá sin costo fijo: comisión sobre ventas.',
   metadataBase: new URL('https://agrofierros.com.ar'),
   openGraph: {
-    title: 'AgroFierros',
-    description: 'Concesionario agrícola: maquinaria nueva y usada, camiones, pick-ups, autos.',
+    title: 'AgroFierros | Maquinaria agrícola nueva y usada en la zona centro de Argentina',
+    description: 'Portal de venta de maquinaria agrícola nueva y usada, camiones, pick-ups y autos en la zona centro de Argentina.',
     images: ['https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/genericas/agro-fierros.jpg'],
+    locale: 'es_AR',
+    type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AgroFierros',
-    description: 'Concesionario agrícola: maquinaria nueva y usada, camiones, pick-ups, autos.',
+    title: 'AgroFierros | Maquinaria agrícola nueva y usada en la zona centro de Argentina',
+    description: 'Portal de venta de maquinaria agrícola nueva y usada, camiones, pick-ups y autos en la zona centro de Argentina.',
     creator: '@tisoler',
     images: ['https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/genericas/agro-fierros.jpg'],
-  },
-  verification: {
-    google: 'google',
-    yandex: 'yandex',
-    yahoo: 'yahoo',
   },
   generator: 'Next.js',
   applicationName: 'agrofierros',

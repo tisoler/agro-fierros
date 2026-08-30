@@ -1,6 +1,4 @@
 import { Suspense } from "react";
-import { headers } from 'next/headers'
-import { userAgentFromString } from 'next/server';
 import dynamic from "next/dynamic";
 import Carrusel from "../Carrusel";
 import SkeletonCarrusel from "../Skeletons/Carrusel";
@@ -10,6 +8,7 @@ import SkeletonCarruselMercadoArgentino from "../Skeletons/CarruselMercadoArgent
 import SkeletonSubtitulo from "../Skeletons/Subtitulo";
 import ContenedorCarruselNovedades from "../CarruselUnidades/Contenedores/Novedades";
 import ContenedorCarruselOportunidades from "../CarruselUnidades/Contenedores/Oportunidades";
+import { obtenerCarruselHome } from "@/app/_lib/servicios";
 
 // Carga diferida del componente que no es crítico
 const SubtituloDinamico = dynamic(() => import('../Subtitulo/subtitulo'), {
@@ -24,23 +23,47 @@ const CarruselMercadoArgentino = dynamic(() => import('../CarruselPrecios/carrus
 const PlacaVenta = dynamic(() => import('../PlacaVenta'));
 
 const ComponenteHome = async () => {
-  const headersList = await headers();
-  const userAgent = headersList.get('user-agent');
-  const esDispositivoMovil = userAgentFromString(userAgent || undefined)?.device?.type === 'mobile';
+  // Sin detección de user-agent (headers()): mantiene la página como estática/ISR.
+  // Las imágenes se adaptan por CSS/media queries.
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'AgroFierros',
+    url: 'https://agrofierros.com.ar',
+    logo: 'https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/genericas/logo.svg',
+    description: 'Portal de venta de maquinaria agrícola nueva y usada en la zona centro de Argentina.',
+    areaServed: 'Argentina',
+  };
 
-  const itemsCarruselPrincipal = new Array(4).fill(0).map((_, idx) => ({
+  const itemsCarruselDefecto = new Array(4).fill(0).map((_, idx) => ({
     urlImagenDesktop: `https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/productos/producto-destacado-${idx + 1}-desktop.webp`,
     urlImagenMobile: `https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/productos/producto-destacado-${idx + 1}.webp`,
     textoAlt: `Producto destacado ${idx + 1}`,
   }));
 
+  // El carrusel principal se gestiona desde el admin (tabla carruselHome);
+  // si no hay items activos se usa el hardcode histórico como fallback.
+  const itemsCarruselBD = await obtenerCarruselHome();
+  const itemsCarruselPrincipal = itemsCarruselBD.length
+    ? itemsCarruselBD.map(item => ({
+        urlImagenDesktop: item.urlImagenDesktop,
+        urlImagenMobile: item.urlImagenMobile,
+        textoAlt: item.textoAlt,
+        urlDestino: item.urlDestino || undefined,
+      }))
+    : itemsCarruselDefecto;
+
   return (
     <section className="flex flex-col bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Suspense fallback={<SkeletonCarrusel />}>
-        <Carrusel items={itemsCarruselPrincipal} esDispositivoMovil={esDispositivoMovil} />
+        <Carrusel items={itemsCarruselPrincipal} />
       </Suspense>
       <Suspense fallback={<SkeletonCarruselUnidades />}>
-        <ContenedorCarruselOportunidades titulo='Oportunidades' esDispositivoMovil={esDispositivoMovil} priorizar={!esDispositivoMovil} />
+        <ContenedorCarruselOportunidades titulo='Oportunidades' priorizar />
       </Suspense>
       <SubtituloDinamico />
       <ListaCategorias />

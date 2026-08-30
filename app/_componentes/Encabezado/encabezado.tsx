@@ -46,7 +46,7 @@ export function Encabezado() {
     <>
       { /* Bloque extra que agrega espacio para que el header no coma pantalla ya que es fixed (el contenido que queda por detrá sube hasta el límite de arriba) */}
       <div className={`${estilo.headerPlaceholder} h-[60px] bg-white`}></div>
-      <header ref={headerMobileRef} className={`flex w-full h-[60px] fixed top-0 left-0 z-50 bg-color-marca ${estilo.header}`}>
+      <header ref={headerMobileRef} className={`flex w-full h-[60px] fixed top-0 left-0 z-50 bg-color-marca shadow-md ${estilo.header}`}>
         <div className="flex w-full items-center justify-between px-2 py-3 md:px-6 md:py-0">
           <Link prefetch={false} href="/" className={`flex items-center text-white ${mostrarBarraBusqueda ? 'hidden' : 'flex'}`}>
             <div className="flex justify-center items-center mr-[0.4rem]">

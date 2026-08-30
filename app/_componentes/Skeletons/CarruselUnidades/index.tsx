@@ -15,15 +15,15 @@ export default function SkeletonCarruselUnidades({ variante = 'grande' }: { vari
         <div className='flex gap-4 md:mx-1 overflow-x-hidden md:w-[calc(100%-64px)]'>
           {
             new Array(6).fill(true).map((_, idx) => (
-              <div key={idx} className="w-[240px] md:w-[280px] border-1 border-gray-300 flex flex-col justify-between">
-                <SkeletonItem className="w-[240px] md:w-[280px] h-[220px] md:h-[250px]"/>
+              <div key={idx} className="w-[214px] md:w-[245px] border-1 border-gray-300 flex flex-col justify-between">
+                <SkeletonItem className="w-[214px] md:w-[245px] h-[220px] md:h-[250px]"/>
                 <div className="w-full h-[72px] border-b-1 border-b-gray-300"/>
                 <div className="flex">
                   <div className="w-full h-[63px] border-b-1 border-b-gray-300"/>
                   <div className="w-full h-[63px] border-b-1 border-b-gray-300 border-x-1 border-x-gray-300"/>
                   <div className="w-full h-[63px] border-b-1 border-b-gray-300"/>
                 </div>
-                <SkeletonItem className="w-[240px] md:w-[280px] h-[44px]"/>
+                <SkeletonItem className="w-[214px] md:w-[245px] h-[44px]"/>
               </div>
             ))
           }

@@ -4,6 +4,7 @@ import { Marca } from "../_modelos/marca";
 import { Categoria } from "../_modelos/categoria";
 import { UnidadDetalle, UnidadImagen } from "../_modelos/unidadImagen";
 import { PrecioMercado } from "../_modelos/precio";
+import { CarruselHome } from "../_modelos/carruselHome";
 import { OPCIONES_ORDEN } from './constantes';
 
 export type UnidadTipo = InferAttributes<Unidad, { omit: never; }>;
@@ -14,6 +15,7 @@ export type UnidadConMarcaCategoriaDetallesImagenes = UnidadConMarcaCategoriaDet
 export type CategoriaTipo = InferAttributes<Categoria, { omit: never; }>;
 export type PrecioMercadoTipo = InferAttributes<PrecioMercado, { omit: never; }>;
 export type MarcaTipo = InferAttributes<Marca, { omit: never; }>;
+export type CarruselHomeTipo = InferAttributes<CarruselHome, { omit: never; }>;
 
 export type BusquedaProps = {
   categoriaSlug: string[],
@@ -21,6 +23,7 @@ export type BusquedaProps = {
   terminoSlug: string,
   ordenSlug: string,
   esDispositivoMovil?: boolean,
+  pagina?: number,
 }
 
 export type OpcionOrden = keyof typeof OPCIONES_ORDEN;

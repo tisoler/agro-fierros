@@ -9,6 +9,7 @@ interface HorizontalScrollerProps {
     urlImagenDesktop: string,
     urlImagenMobile: string,
     textoAlt: string,
+    urlDestino?: string,
   }[]
   autoscroll?: boolean;
   autoScrollInterval?: number;
@@ -26,12 +27,24 @@ const Carrusel: React.FC<HorizontalScrollerProps> = ({
   const autoScrollTimeoutRef = useRef<NodeJS.Timeout>(null);
   const currentIndexRef = useRef(0);
   const currentTranslate = useRef(0);
-  // StartX and isDragging are not refs because they are not needed outside the scope of the event handlers
-  // They are used to track the touch/mouse position and dragging state
-  // and they are not used in the render method
-  let startX = 0;
-  let startY = 0;
-  let isDragging = false;
+  // Refs para el arrastre táctil (no provocan re-render)
+  const startXRef = useRef(0);
+  const startYRef = useRef(0);
+  const isDraggingRef = useRef(false);
+
+  const swipeSlide = (index: number) => {
+    if (currentIndexRef.current === index || !scrollerRef.current) return;
+
+    let newIndex = index;
+    if (newIndex > items.length - 1) newIndex = 0;
+    if (newIndex < 0) newIndex = items.length - 1;
+    currentIndexRef.current = newIndex;
+
+    const viewWidth = scrollerRef.current?.offsetWidth;
+    currentTranslate.current = -newIndex * (viewWidth || 1);
+    smoothScrollTo(scrollerRef.current, currentTranslate.current);
+    updateBullets(newIndex);
+  };
 
   const startAutoScroll = () => {
     autoScrollTimeoutRef.current = setInterval(() => {
@@ -101,35 +114,21 @@ const Carrusel: React.FC<HorizontalScrollerProps> = ({
     );
   }
 
-  const swipeSlide = (index: number) => {
-    if (currentIndexRef.current === index || !scrollerRef.current) return;
-
-    let newIndex = index;
-    if (newIndex > items.length - 1) newIndex = 0;
-    if (newIndex < 0) newIndex = items.length - 1;
-    currentIndexRef.current = newIndex;
-
-    const viewWidth = scrollerRef.current?.offsetWidth;
-    currentTranslate.current = -newIndex * (viewWidth || 1);
-    smoothScrollTo(scrollerRef.current, currentTranslate.current);
-    updateBullets(newIndex);
-  };
-
   const handleStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    isDragging = true;
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
+    isDraggingRef.current = true;
+    startXRef.current = e.touches[0].clientX;
+    startYRef.current = e.touches[0].clientY;
   };
 
   const handleMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (!isDragging || !scrollerRef.current) return;
+    if (!isDraggingRef.current || !scrollerRef.current) return;
 
     const clientX = e.touches && e.touches[0].clientX;
     if (!clientX) return;
 
-    const diffX = clientX - startX;
+    const diffX = clientX - startXRef.current;
     const clientY = e.touches && e.touches[0].clientY || 0;
-    const diffY = clientY - startY;
+    const diffY = clientY - startYRef.current;
     if (Math.abs(diffY) > Math.abs(diffX)) return;
 
     let newTranslate = currentTranslate.current + diffX;
@@ -156,13 +155,13 @@ const Carrusel: React.FC<HorizontalScrollerProps> = ({
   };
 
   const handleEnd = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (!isDragging || !scrollerRef.current) return;
-    isDragging = false;
+    if (!isDraggingRef.current || !scrollerRef.current) return;
+    isDraggingRef.current = false;
 
     const endX = e.changedTouches && e.changedTouches[0].clientX;
     if (!endX) return;
 
-    const diffX = endX - startX;
+    const diffX = endX - startXRef.current;
 
     if (Math.abs(diffX) > 50) {
       swipeSlide(currentIndexRef.current + (diffX > 0 ? -1 : 1));
@@ -197,22 +196,13 @@ const Carrusel: React.FC<HorizontalScrollerProps> = ({
               key={idx + 1}
               className="relative shrink-0 md:snap-start aspect-[4/5] md:aspect-auto md:h-[430px] w-full"
             >
-              <picture>
-                <source media="(min-width: 768px)" srcSet={item.urlImagenDesktop}></source>
-                <source media="(max-width: 767px)" srcSet={item.urlImagenMobile}></source>
-                <Image
-                  priority
-                  loading="eager"
-                  fetchPriority={idx === 0 ? 'high' : 'auto'}
-                  src="https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/genericas/transparente-chica.svg"
-                  alt={item.textoAlt}
-                  width={dimensions.width}
-                  height={dimensions.height}
-                  className="object-cover object-center w-full h-full"
-                  quality={85} // Optimización de calidad
-                  sizes="100vw"
-                />
-              </picture>
+              {item.urlDestino ? (
+                <a href={item.urlDestino} className="block w-full h-full">
+                  <ContenidoSlide item={item} idx={idx} dimensions={dimensions} />
+                </a>
+              ) : (
+                <ContenidoSlide item={item} idx={idx} dimensions={dimensions} />
+              )}
             </div>
           )
         }
@@ -226,7 +216,7 @@ const Carrusel: React.FC<HorizontalScrollerProps> = ({
             id={`bullet-${index}`}
             key={index}
             onClick={() => swipeSlide(index)}
-            className={`w-[8px] md:w-[10px] h-[8px] md:h-[10px] rounded-full cursor-pointer ${currentIndexRef.current === index
+            className={`w-[8px] md:w-[10px] h-[8px] md:h-[10px] rounded-full cursor-pointer ${index === 0
               ? 'bg-color-marca'
               : 'bg-color-sec-marca'
               }`}
@@ -237,5 +227,28 @@ const Carrusel: React.FC<HorizontalScrollerProps> = ({
     </div>
   );
 };
+
+const ContenidoSlide = ({ item, idx, dimensions }: {
+  item: { urlImagenDesktop: string, urlImagenMobile: string, textoAlt: string },
+  idx: number,
+  dimensions: { width: number, height: number },
+}) => (
+  <picture>
+    <source media="(min-width: 768px)" srcSet={item.urlImagenDesktop}></source>
+    <source media="(max-width: 767px)" srcSet={item.urlImagenMobile}></source>
+    <Image
+      priority
+      loading="eager"
+      fetchPriority={idx === 0 ? 'high' : 'auto'}
+      src="https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/genericas/transparente-chica.svg"
+      alt={item.textoAlt}
+      width={dimensions.width}
+      height={dimensions.height}
+      className="object-cover object-center w-full h-full"
+      quality={85} // Optimización de calidad
+      sizes="100vw"
+    />
+  </picture>
+);
 
 export default Carrusel;

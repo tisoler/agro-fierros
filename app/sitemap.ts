@@ -3,7 +3,9 @@ import { obtenerUnidadBusqueda } from './_lib/servicios'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const resultado = await obtenerUnidadBusqueda({})();
-  
+
+  // Nota: las unidades no tienen timestamps en BD (timestamps: false),
+  // por lo que lastModified usa la fecha de generación del sitemap.
   const unidadesUrls = resultado?.unidadesFiltradas?.map((unidad) => ({
     url: `https://agrofierros.com.ar/unidad/${unidad.slug}`,
     lastModified: new Date(),

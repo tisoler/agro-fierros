@@ -3,9 +3,10 @@ import { initPrecioMercado, PrecioMercado } from "../_modelos/precio";
 import { Categoria, initCategoria } from "../_modelos/categoria";
 import { initUnidad, Unidad } from "../_modelos/unidad";
 import { Marca } from "../_modelos/marca";
-import { CategoriaTipo, MarcaTipo, PrecioMercadoTipo, UnidadConMarca, UnidadConMarcaCategoria, UnidadConMarcaCategoriaDetallesImagenes } from "./tipos";
+import { CarruselHomeTipo, CategoriaTipo, MarcaTipo, PrecioMercadoTipo, UnidadConMarca, UnidadConMarcaCategoria, UnidadConMarcaCategoriaDetallesImagenes } from "./tipos";
 import { UnidadImagen } from "../_modelos/unidadImagen";
 import { UnidadDetalle } from "../_modelos/unidadDetalle";
+import { CarruselHome, initCarruselHome } from "../_modelos/carruselHome";
 import { Op, Order } from "sequelize";
 import { MAIZ, SOJA, TRIGO, USD_BLUE, USD_OFICIAL } from "./constantes";
 
@@ -150,6 +151,28 @@ export const obtenerCategorias = unstable_cache(
   },
   ['categorias'],
   { revalidate: 7200, tags: ['categorias'] } // revalidar cada 2 horas
+);
+
+export const obtenerCarruselHome = unstable_cache(
+  async (): Promise<CarruselHomeTipo[]> => {
+    try {
+      await initCarruselHome();
+      const items = await CarruselHome.findAll({
+        where: {
+          activo: true,
+        },
+        order: [['orden', 'ASC'], ['id', 'ASC']],
+        raw: true,
+      });
+      if (!items?.length) return [];
+      return items;
+    } catch {
+      console.error('Error obteniendo carrusel de home');
+      return [];
+    }
+  },
+  ['carrusel-home'],
+  { revalidate: 3600, tags: ['carrusel-home'] } // revalidar cada 1 hora
 );
 
 export const obtenerUnidadesOportunidades = unstable_cache(

@@ -8,21 +8,22 @@ import UnidadTarjeta from "./CarruselUnidad";
 
 const CarruselUnidades = ({ unidades, esDispositivoMovil = true, priorizar = false }:
   { unidades: UnidadConMarca[], esDispositivoMovil?: boolean, priorizar?: boolean }) => {
-  let startX: number;
-  let scrollLeft: number;
+  // Refs para el arrastre táctil (no provocan re-render)
+  const startXRef = React.useRef(0);
+  const scrollLeftRef = React.useRef(0);
   const carruselRef = React.useRef<HTMLDivElement>(null);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     if (!carruselRef.current) return;
-    startX = e.touches[0].clientX;
-    scrollLeft = carruselRef.current.scrollLeft;
+    startXRef.current = e.touches[0].clientX;
+    scrollLeftRef.current = carruselRef.current.scrollLeft;
   };
 
   const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
     if (!carruselRef.current) return;
     const endX = e.changedTouches[0].clientX;
-    const walk = endX - startX; // Calcular el desplazamiento
-    carruselRef.current.scrollLeft = scrollLeft - walk; // Aplicar el desplazamiento
+    const walk = endX - startXRef.current; // Calcular el desplazamiento
+    carruselRef.current.scrollLeft = scrollLeftRef.current - walk; // Aplicar el desplazamiento
   };
 
   const handlePrev = () => {

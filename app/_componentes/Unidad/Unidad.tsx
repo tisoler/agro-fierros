@@ -1,5 +1,6 @@
 import { UnidadConMarcaCategoriaDetallesImagenes } from '@/app/_lib/tipos';
 import { UnidadDetalle } from '@/app/_modelos/unidadDetalle';
+import { formatearPrecioDolar } from '@/app/_lib/utilidades';
 import IconoHerramientas from '../IconosSvg/Herramientas';
 import { WHATSAPP_BOTON_TEXTO, WHATSAPP_MENSAJE_UNIDAD, WHATSAPP_NUMERO } from '@/app/_lib/constantes';
 import WhatsAppIcono from '../IconosSvg/WhatsApp/WhatsAppIcono';
@@ -38,15 +39,26 @@ const Unidad = (
         <h1 className="w-full md:min-h-[72px] text-color-marca text-2xl md:text-3xl font-semibold mt-1 md:mt-0">
           {unidad?.titulo}
         </h1>
+        {/* Precio en dólares (solo si tiene) */}
+        {unidad?.precioDolar != null && (
+          <p className="w-full text-2xl md:text-3xl font-bold text-slate-900 mt-1">
+            {formatearPrecioDolar(unidad.precioDolar)}
+          </p>
+        )}
         <ImagenesMobile unidad={unidad} esDispositivoMovil={esDispositivoMovil} />
-        <div className="flex gap-3 md:mt-4 font-semibold text-neutral-700">
-          <div className="border-1 border-neutral-500 px-2 py-1 rounded min-w-[65px]">
+        <div className="flex flex-wrap gap-2 md:mt-4 font-semibold text-neutral-700">
+          <div className={`rounded-full px-3 py-1 text-sm font-bold text-white ${unidad?.nuevo ? 'bg-estado-nueva' : 'bg-estado-usada'}`}>
             {unidad?.nuevo ? 'NUEVO' : 'USADO'}
           </div>
-          <div className="border-1 border-neutral-500 px-2 py-1 rounded min-w-[108px]">
-            <p className="">Marca: {unidad?.marca?.nombre}</p>
+          <div className="rounded-btn border border-slate-300 bg-white px-2.5 py-1 text-sm">
+            Marca: {unidad?.marca?.nombre}
           </div>
-          <div className="border-1 border-neutral-500 px-2 py-1 rounded min-w-[108px]">Modelo: {unidad?.modelo || new Date().getFullYear.toString()}</div>
+          <div className="rounded-btn border border-slate-300 bg-white px-2.5 py-1 text-sm">Modelo: {unidad?.modelo || new Date().getFullYear().toString()}</div>
+          {unidad?.esOportunidad && (
+            <div className="rounded-full px-3 py-1 text-sm font-bold text-white bg-estado-oportunidad">
+              OPORTUNIDAD
+            </div>
+          )}
         </div>
         <ul className='w-full mt-5'>
           <li key='title' className='flex justify-between items-center py-2'>
@@ -59,7 +71,7 @@ const Unidad = (
               title={WHATSAPP_BOTON_TEXTO}
               target="_blank"
               rel="noopener noreferrer"
-              className='inline-flex xl:w-[130px] h-[32px] gap-2 items-center rounded border-1 border-color-marca bg-color-marca text-white fill-white text-xl font-bold hover:bg-white hover:text-color-marca hover:fill-color-marca active:bg-color-marca active:border-color-marca active:text-white active:fill-white px-3 py-[1px] cursor-pointer'
+              className='inline-flex xl:w-[130px] h-[36px] gap-2 items-center rounded-btn border border-color-marca bg-color-marca text-white fill-white text-lg font-bold hover:bg-marca-500 hover:border-marca-500 active:bg-marca-700 active:border-marca-700 px-3 py-[1px] cursor-pointer transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-color-marca focus-visible:ring-offset-1'
             >
               Consultar <WhatsAppIcono />
             </a>

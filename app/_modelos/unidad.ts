@@ -22,6 +22,7 @@ export class Unidad extends Model<
   declare slug: string;
   declare activa: boolean;
   declare vendida: boolean;
+  declare precioDolar: CreationOptional<number | null>;
 }
 
 export const initUnidad = async (db?: Sequelize) => {
@@ -83,6 +84,10 @@ export const initUnidad = async (db?: Sequelize) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      precioDolar: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
     },
     {
       sequelize,
@@ -105,7 +110,7 @@ export const initUnidad = async (db?: Sequelize) => {
   if (!Unidad.associations.categorias) {
     Unidad.belongsToMany(Categoria, { through: 'unidadCategorias', foreignKey: 'idUnidad', sourceKey: 'id', as: 'categorias', timestamps: false });
   }
-  if (!Categoria.associations.unidaddes) {
+  if (!Categoria.associations.unidades) {
     Categoria.belongsToMany(Unidad, { through: 'unidadCategorias', foreignKey: 'idCategoria', sourceKey: 'id', as: 'unidades', timestamps: false });
   }
 

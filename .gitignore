@@ -46,3 +46,5 @@ comandos-docker
 docker-compose.yml
 
 /app/api/revalidar
+
+*.conf

@@ -9,6 +9,7 @@ export const enum URL_PARAMETRO {
   CATEGORIA = 'categoria',
   MARCA = 'marca',
   ORDEN = 'orden',
+  PAGINA = 'pagina',
 }
 
 export enum OPCIONES_ORDEN {
@@ -20,6 +21,10 @@ export enum OPCIONES_ORDEN {
 export const OPCION_ORDEN_DEFECTO = 'ninguno';
 
 export const CANTIDAD_UNIDADES_RELACIONADAS = 7;
+
+// Corte configurable de la paginación del buscador.
+// Con inventarios chicos la paginación queda transparente (una sola página).
+export const UNIDADES_POR_PAGINA = 48;
 
 export const USD_OFICIAL = 'USD oficial';
 export const USD_BLUE = 'USD blue';

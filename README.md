@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AgroFierros
 
-## Getting Started
+Portal de venta de maquinaria agrícola para la zona centro de Argentina.
+Vendedores y concesionarias publican unidades sin costo fijo, con comisión
+sobre ventas.
 
-First, run the development server:
+- Producción: `https://agrofierros.com.ar`
+- Docs para agentes: [AGENTS.md](./AGENTS.md) (arquitectura y convenciones)
+  y [DESIGN.md](./DESIGN.md) (sistema de diseño).
+
+## Stack
+
+Next.js 16 (App Router, `output: 'standalone'`) + React 19 + Tailwind CSS 4 +
+Sequelize/MySQL + pnpm. Imágenes en CDN DigitalOcean Spaces. Deploy con Docker
++ nginx.
+
+## Requisitos
+
+- Node.js >= 22
+- pnpm >= 10 (`corepack enable` si no lo tenés instalado)
+- Acceso a la base MySQL (variables en `.env`)
+
+## Desarrollo
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+cp .env.example .env   # o pedir el .env real
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Levanta en `http://localhost:3000` (el puerto puede ajustarse vía `PORT`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Comando | Descripción |
+| --- | --- |
+| `pnpm dev` | servidor de desarrollo |
+| `pnpm dev:turbo` | desarrollo con Turbopack |
+| `pnpm build` | build de producción |
+| `pnpm start` | servidor de producción |
+| `pnpm lint` | ESLint |
 
-## Learn More
+## Variables de entorno
 
-To learn more about Next.js, take a look at the following resources:
+| Variable | Descripción |
+| --- | --- |
+| `NEXT_PUBLIC_BD_HOST` / `NEXT_PUBLIC_BD_PUERTO` | MySQL host/puerto |
+| `NEXT_PUBLIC_BD_USUARIO` / `NEXT_PUBLIC_BD_PASSWORD` | credenciales MySQL |
+| `NEXT_PUBLIC_BD_BASE` | nombre de la base |
+| `REVALIDATION_SECRET` | secreto del endpoint `POST /api/revalidar` |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Docker
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+docker-compose up --build -d   # ver comandos-docker
+```
 
-## Deploy on Vercel
+El `Dockerfile` es multi-stage y usa el build standalone de Next. En
+producción nginx (`agrofierros.com.ar.conf`) rutea `/_next/static/` al CDN y
+el resto al contenedor; QA usa `qa.agrofierros.com.ar.conf`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Admin
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+El panel interno (`agrofierros-admin`) es un proyecto Next.js separado que
+corre en un subdominio, gestiona unidades y carruseles contra la misma base y
+revalida la caché de la tienda vía `POST /api/revalidar`.

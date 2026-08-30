@@ -3,23 +3,27 @@ import Image from "next/image";
 import Link from "next/link";
 import { NUEVO, USADO } from "@/app/_lib/constantes";
 import { UnidadConMarca } from "@/app/_lib/tipos";
-import { cdnLoader } from "@/app/_lib/utilidades";
+import { cdnLoader, formatearPrecioDolar } from "@/app/_lib/utilidades";
 
 const UnidadBuscador = (
   { unidad, esDispositivoMovil = true, priorizar }:
     { unidad: UnidadConMarca, esDispositivoMovil?: boolean, priorizar?: boolean }
 ) => {
   const dimensions = esDispositivoMovil
-    ? { width: 180, height: 180 }  // iPhone promedio 4:5
+    ? { width: 180, height: 180 }
     : { width: 280, height: 250 };
 
   return (
     <Link
       href={`/unidad/${unidad.slug}`}
       key={unidad.id}
-      className="flex flex-row md:flex-col w-full md:max-w-[340px] h-[180px] md:h-[430px] group hover:shadow-xl hover:-translate-y-1 transition-all duration-300 bg-white"
+      className="
+        flex flex-row md:flex-col w-full md:max-w-[340px] h-[180px] md:h-auto group bg-white
+        rounded-card overflow-hidden shadow-card hover:shadow-card-hover hover:-translate-y-0.5
+        transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-color-marca
+      "
     >
-      <div className="relative w-[180px] md:w-full md:max-w-[340px] h-[180px] md:h-[250px]">
+      <div className="relative w-[180px] md:w-full md:max-w-[340px] h-[180px] md:h-[250px] shrink-0">
         <Image
           loader={cdnLoader}
           src={unidad.imagenDestacadaUrl}
@@ -31,29 +35,52 @@ const UnidadBuscador = (
           className={`object-cover object-center h-full w-full`}
           quality={80}
         />
+        {/* Badges de estado compactos sobre la imagen */}
+        <div className="absolute top-2 left-2 flex gap-1">
+          <span className={`
+            rounded-full px-2 py-0.5 text-[10px] md:text-xs font-bold text-white shadow-sm
+            ${unidad.nuevo ? 'bg-estado-nueva' : 'bg-estado-usada'}
+          `}>
+            {unidad.nuevo ? NUEVO.toUpperCase() : USADO.toUpperCase()}
+          </span>
+          {unidad.esOportunidad && (
+            <span className="rounded-full px-2 py-0.5 text-[10px] md:text-xs font-bold text-white shadow-sm bg-estado-oportunidad">
+              OPORTUNIDAD
+            </span>
+          )}
+        </div>
+        {/* Precio en dólares (solo si tiene) */}
+        {unidad.precioDolar != null && (
+          <div className="absolute bottom-2 left-2 rounded-btn bg-slate-900/85 px-2 py-0.5 text-xs md:text-sm font-bold text-white shadow-sm backdrop-blur-sm">
+            {formatearPrecioDolar(unidad.precioDolar)}
+          </div>
+        )}
       </div>
-      <div className="flex flex-col w-[calc(100%-180px)] md:w-full">
+      <div className="flex flex-col flex-1 md:flex-none w-[calc(100%-180px)] md:w-full">
         <h2
           className="
-            flex flex-1 items-center justify-center text-center text-neutral-800 py-3 text-[18px] md:text-[22px] leading-6 min-h-[72px]
-            break-words px-2 py-3 line-clamp-2 border-x-[1.5px] border-x-neutral-200 border-t-[1.5px] border-t-neutral-200 md:border-t-0 wei font-semibold
+            flex flex-1 md:flex-none items-center justify-center text-center text-neutral-800
+            py-2 md:py-3 px-2 text-[15px] md:text-lg leading-5 md:leading-6 min-h-[56px] md:min-h-[64px]
+            break-words line-clamp-2 font-semibold
           "
         >
           {unidad.titulo}
         </h2>
-        <div className="flex h-[64px] text-gray-600 border-t-1 border-t-neutral-200 border-x-[1.5px] border-x-neutral-200">
-          <div className={`flex justify-center items-center w-[30%] md:w-full h-full text-base md:text-lg text-neutral-900 bg-white`}>
-            {unidad.nuevo ? NUEVO : USADO}
+        <div className="flex h-[52px] text-gray-600 border-t border-slate-100">
+          <div className="flex flex-col justify-center items-center w-[30%] md:w-full h-full text-sm md:text-base text-center text-neutral-700 px-1">
+            <span className="text-[11px] md:text-xs text-slate-400 uppercase">Modelo</span>
+            <span>{unidad.modelo || new Date().getFullYear().toString()}</span>
           </div>
-          <div className="flex flex-col justify-center items-center w-[30%] md:w-full h-full text-sm md:text-base text-center text-neutral-700 border-x-[1px] border-x-neutral-200">
-            <span>Modelo</span>
-            <span>{unidad.modelo || new Date().getFullYear.toString()}</span>
-          </div>
-          <div className="flex justify-center items-center h-full w-[40%] md:w-full text-sm md:text-base text-center text-neutral-700 px-1">
+          <div className="flex justify-center items-center h-full w-[40%] md:w-full text-sm md:text-base text-center text-neutral-700 px-1 border-l border-slate-100">
             {unidad.marca?.nombre || ''}
           </div>
+          <div className="hidden md:flex md:w-full justify-center items-center text-xs text-slate-400 border-l border-slate-100">
+            {unidad.vendida ? 'Vendida' : 'Disponible'}
+          </div>
         </div>
-        <div className="flex justify-center items-center bg-color-marca md:bg-[#1E293B] group-hover:bg-color-marca text-white py-2 text-xl md:text-lg font-bold md:font-semibold">Ver más</div>
+        <div className="flex justify-center items-center bg-color-marca md:bg-color-sec-marca group-hover:bg-color-marca text-white py-2 text-lg md:text-base font-bold md:font-semibold transition-colors duration-300">
+          Ver más
+        </div>
       </div>
     </Link>
   );
