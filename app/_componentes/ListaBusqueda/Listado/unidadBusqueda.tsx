@@ -4,6 +4,7 @@ import Link from "next/link";
 import { NUEVO, USADO } from "@/app/_lib/constantes";
 import { UnidadConMarca } from "@/app/_lib/tipos";
 import { cdnLoader, formatearPrecioDolar } from "@/app/_lib/utilidades";
+import CintaVendida from "@/app/_componentes/CintaVendida";
 
 const UnidadBuscador = (
   { unidad, esDispositivoMovil = true, priorizar }:
@@ -23,7 +24,7 @@ const UnidadBuscador = (
         transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-color-marca
       "
     >
-      <div className="relative w-[180px] md:w-full md:max-w-[340px] h-[180px] md:h-[250px] shrink-0">
+      <div className="relative w-[180px] md:w-full md:max-w-[340px] h-[180px] md:h-[250px] shrink-0 overflow-hidden">
         <Image
           loader={cdnLoader}
           src={unidad.imagenDestacadaUrl}
@@ -55,6 +56,7 @@ const UnidadBuscador = (
             {formatearPrecioDolar(unidad.precioDolar)}
           </div>
         )}
+        {unidad.vendida && <CintaVendida />}
       </div>
       <div className="flex flex-col flex-1 md:flex-none w-[calc(100%-180px)] md:w-full">
         <h2

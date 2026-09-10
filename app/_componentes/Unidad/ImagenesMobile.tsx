@@ -1,5 +1,6 @@
 import { UnidadConMarcaCategoriaDetallesImagenes } from '@/app/_lib/tipos';
 import Carrusel from '../Carrusel';
+import CintaVendida from '../CintaVendida';
 
 const ImagenesMobile = (
   { unidad, esDispositivoMovil = true }: 
@@ -13,8 +14,11 @@ const ImagenesMobile = (
 
   return (
     <>
-      <div className='flex md:hidden w-full my-4'>
-        <Carrusel items={items} autoscroll={false} esDispositivoMovil={esDispositivoMovil} />
+      <div className='relative w-full my-4 overflow-hidden rounded-card'>
+        <div className='flex md:hidden w-full'>
+          <Carrusel items={items} autoscroll={false} esDispositivoMovil={esDispositivoMovil} />
+        </div>
+        {unidad?.vendida && <CintaVendida tamanio="grande" />}
       </div>
     </>
   );

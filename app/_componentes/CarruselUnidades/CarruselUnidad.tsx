@@ -4,6 +4,7 @@ import Link from "next/link";
 import { NUEVO, USADO } from "@/app/_lib/constantes";
 import { UnidadConMarca } from "@/app/_lib/tipos";
 import { cdnLoader, formatearPrecioDolar } from "@/app/_lib/utilidades";
+import CintaVendida from "@/app/_componentes/CintaVendida";
 
 const UnidadTarjeta = (
   { unidad, esDispositivoMovil = true, priorizar }:
@@ -23,7 +24,7 @@ const UnidadTarjeta = (
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-color-marca
       "
     >
-      <div className="relative w-full h-[220px] md:h-[250px]">
+      <div className="relative w-full h-[220px] md:h-[250px] overflow-hidden">
         <Image
           loader={cdnLoader}
           src={unidad.imagenDestacadaUrl}
@@ -55,6 +56,7 @@ const UnidadTarjeta = (
             {formatearPrecioDolar(unidad.precioDolar)}
           </div>
         )}
+        {unidad.vendida && <CintaVendida />}
       </div>
       <h2
         className="

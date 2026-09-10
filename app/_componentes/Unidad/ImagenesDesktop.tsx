@@ -2,6 +2,7 @@
 import { UnidadConMarcaCategoriaDetallesImagenes } from '@/app/_lib/tipos';
 import Image from 'next/image';
 import { useState } from 'react';
+import CintaVendida from '../CintaVendida';
 
 const ImagenesDesktop = ({ unidad }: { unidad: UnidadConMarcaCategoriaDetallesImagenes }) => {
   const [imagenPrimerPlano, setImagenPrimerPlano] = useState<number>(0);
@@ -29,23 +30,26 @@ const ImagenesDesktop = ({ unidad }: { unidad: UnidadConMarcaCategoriaDetallesIm
           ))
         }
       </div>
-      <picture>
-        <source
-          media="(min-width: 768px)"
-          srcSet={unidad.imagenes?.[imagenPrimerPlano] ? unidad.imagenes[imagenPrimerPlano].urlEscritorio : unidad.imagenDestacadaUrl}
-        ></source>
-        <source media="(max-width: 767px)" srcSet=""></source>
-        <Image
-          loading='eager'
-          priority
-          src="https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/genericas/transparente-chica.svg"
-          alt={unidad?.titulo || 'Unidad'}
-          height={490}
-          width={640}
-          className="w-[640px] h-[490px] object-cover object-center"
-          quality={85} // Optimización de calidad
-        />
-      </picture>
+      <div className="relative h-fit overflow-hidden rounded-card">
+        <picture>
+          <source
+            media="(min-width: 768px)"
+            srcSet={unidad.imagenes?.[imagenPrimerPlano] ? unidad.imagenes[imagenPrimerPlano].urlEscritorio : unidad.imagenDestacadaUrl}
+          ></source>
+          <source media="(max-width: 767px)" srcSet=""></source>
+          <Image
+            loading='eager'
+            priority
+            src="https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/genericas/transparente-chica.svg"
+            alt={unidad?.titulo || 'Unidad'}
+            height={490}
+            width={640}
+            className="w-[640px] h-[490px] object-cover object-center"
+            quality={85} // Optimización de calidad
+          />
+        </picture>
+        {unidad?.vendida && <CintaVendida tamanio="grande" />}
+      </div>
     </div>
   );
 };
