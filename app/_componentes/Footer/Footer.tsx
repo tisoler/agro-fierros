@@ -32,7 +32,7 @@ const Footer = () => {
       <section className='flex items-start col-1 md:col-2 row-2 md:row-1 md:row-span-3'>
         <ul className='flex flex-col gap-2 text-lg md:text-xl font-semibold text-white'>
           <li><Link className='hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded' href='/'>Inicio</Link></li>
-          <li><Link className='hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded' href='/unidad'>Buscador de maquinarias y vehículos</Link></li>
+          <li><Link className='hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded' href='/buscar?categoria=todas'>Buscador de maquinarias y vehículos</Link></li>
           <li><Link className='hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded' href='/buscar?categoria=maquinas-ombu'>Maquinaria Ombú</Link></li>
           <li><Link className='hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded' href='/buscar?categoria=remolques'>Remolques</Link></li>
         </ul>

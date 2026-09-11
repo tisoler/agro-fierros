@@ -38,10 +38,10 @@ const FiltroCategorias = (
         }
         // Cuando selecciona un nodo hijo, deseleccionar el nodo padre
         for (const catPadreId of Object.keys(arbolCategoria)) {
-          if (arbolCategoria[Number(catPadreId)].some(ch => ch.id === categoria.id)) {
-            // Recuperar el nodo padre - IMPORTANTE: funciona sólo en el primer nivel debajo de 'todas'
-            const nodoPadre = arbolCategoria[1].find(cat => cat.id === Number(catPadreId));
-            parametros.delete(URL_PARAMETRO.CATEGORIA, nodoPadre?.slug || '');
+          if (arbolCategoria[Number(catPadreId)]?.some(ch => ch.id === categoria.id)) {
+            // Recuperar el nodo padre buscándolo en cualquier nivel del árbol
+            const nodoPadre = Object.values(arbolCategoria).flat().find(cat => cat.id === Number(catPadreId));
+            if (nodoPadre?.slug) parametros.delete(URL_PARAMETRO.CATEGORIA, nodoPadre.slug);
             break;
           }
         };

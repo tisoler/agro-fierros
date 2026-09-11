@@ -27,7 +27,7 @@ const ListaBusquedaContenedor = async ({ categoriaSlug, marcasSlug, terminoSlug,
         <p className="text-neutral-800 text-xl md:text-2xl font-semibold">No se encontraron resultados</p>
         <p className="text-slate-500 text-sm md:text-base">Probá quitando algún filtro o usando otro término de búsqueda.</p>
         <Link
-          href='/buscar'
+          href='/buscar?categoria=todas'
           className="rounded-btn bg-color-marca hover:bg-marca-500 active:bg-marca-700 text-white text-sm font-semibold px-4 py-2 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-color-marca focus-visible:ring-offset-1"
         >
           Limpiar filtros

@@ -78,7 +78,7 @@ const ChipsFiltrosActivos = ({ categoriaSlug, marcasSlug, terminoSlug, ordenSlug
           <span aria-hidden="true" className="text-slate-400">✕</span>
         </Link>
       )}
-      <Link href='/buscar' className={`${claseChip} border-transparent text-color-marca font-semibold hover:bg-marca-50`}>
+      <Link href='/buscar?categoria=todas' className={`${claseChip} border-transparent text-color-marca font-semibold hover:bg-marca-50`}>
         Limpiar todo
       </Link>
     </div>
