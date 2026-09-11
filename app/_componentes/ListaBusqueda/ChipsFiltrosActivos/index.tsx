@@ -55,30 +55,30 @@ const ChipsFiltrosActivos = ({ categoriaSlug, marcasSlug, terminoSlug, ordenSlug
   return (
     <div className="flex flex-wrap items-center gap-2 w-full">
       {hayCategorias && categoriaSlug.filter(cat => cat !== 'todas').map(cat => (
-        <Link key={`cat-${cat}`} href={construirUrl({ sinCategorias: [cat] })} className={claseChip} title={`Quitar categoría ${humanizarSlug(cat)}`}>
+        <Link key={`cat-${cat}`} href={construirUrl({ sinCategorias: [cat] })} prefetch={false} className={claseChip} title={`Quitar categoría ${humanizarSlug(cat)}`}>
           {humanizarSlug(cat)}
           <span aria-hidden="true" className="text-slate-400">✕</span>
         </Link>
       ))}
       {hayMarcas && marcasSlug.map(marca => (
-        <Link key={`marca-${marca}`} href={construirUrl({ sinMarcas: [marca] })} className={claseChip} title={`Quitar marca ${humanizarSlug(marca)}`}>
+        <Link key={`marca-${marca}`} href={construirUrl({ sinMarcas: [marca] })} prefetch={false} className={claseChip} title={`Quitar marca ${humanizarSlug(marca)}`}>
           {humanizarSlug(marca)}
           <span aria-hidden="true" className="text-slate-400">✕</span>
         </Link>
       ))}
       {hayTermino && (
-        <Link href={construirUrl({ sinTermino: true })} className={claseChip} title={`Quitar búsqueda "${terminoSlug}"`}>
+        <Link href={construirUrl({ sinTermino: true })} prefetch={false} className={claseChip} title={`Quitar búsqueda "${terminoSlug}"`}>
           “{terminoSlug}”
           <span aria-hidden="true" className="text-slate-400">✕</span>
         </Link>
       )}
       {hayOrden && (
-        <Link href={construirUrl({ sinOrden: true })} className={claseChip} title={`Quitar orden ${OPCIONES_ORDEN[ordenSlug as OpcionOrden]}`}>
+        <Link href={construirUrl({ sinOrden: true })} prefetch={false} className={claseChip} title={`Quitar orden ${OPCIONES_ORDEN[ordenSlug as OpcionOrden]}`}>
           Orden: {OPCIONES_ORDEN[ordenSlug as OpcionOrden]}
           <span aria-hidden="true" className="text-slate-400">✕</span>
         </Link>
       )}
-      <Link href='/buscar?categoria=todas' className={`${claseChip} border-transparent text-color-marca font-semibold hover:bg-marca-50`}>
+      <Link href='/buscar?categoria=todas' prefetch={false} className={`${claseChip} border-transparent text-color-marca font-semibold hover:bg-marca-50`}>
         Limpiar todo
       </Link>
     </div>

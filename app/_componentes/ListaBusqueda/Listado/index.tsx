@@ -28,6 +28,7 @@ const ListaBusquedaContenedor = async ({ categoriaSlug, marcasSlug, terminoSlug,
         <p className="text-slate-500 text-sm md:text-base">Probá quitando algún filtro o usando otro término de búsqueda.</p>
         <Link
           href='/buscar?categoria=todas'
+          prefetch={false}
           className="rounded-btn bg-color-marca hover:bg-marca-500 active:bg-marca-700 text-white text-sm font-semibold px-4 py-2 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-color-marca focus-visible:ring-offset-1"
         >
           Limpiar filtros
@@ -52,6 +53,7 @@ const ListaBusquedaContenedor = async ({ categoriaSlug, marcasSlug, terminoSlug,
           {paginaActual > 1 ? (
             <Link
               href={construirUrlPagina({ categoriaSlug, marcasSlug, terminoSlug, ordenSlug }, paginaActual - 1)}
+              prefetch={false}
               className="rounded-btn border border-slate-300 bg-white hover:border-color-marca hover:text-color-marca px-3 py-1.5 text-sm font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-color-marca"
             >
               Anterior
@@ -65,6 +67,7 @@ const ListaBusquedaContenedor = async ({ categoriaSlug, marcasSlug, terminoSlug,
           {paginaActual < totalPaginas ? (
             <Link
               href={construirUrlPagina({ categoriaSlug, marcasSlug, terminoSlug, ordenSlug }, paginaActual + 1)}
+              prefetch={false}
               className="rounded-btn border border-slate-300 bg-white hover:border-color-marca hover:text-color-marca px-3 py-1.5 text-sm font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-color-marca"
             >
               Siguiente

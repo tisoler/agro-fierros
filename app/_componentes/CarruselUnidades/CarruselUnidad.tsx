@@ -18,6 +18,7 @@ const UnidadTarjeta = (
     <Link
       href={`/unidad/${unidad.slug}`}
       key={unidad.id}
+      prefetch={false}
       className="
         flex flex-col shrink-0 w-[214px] md:w-[245px] group bg-white rounded-card overflow-hidden
         shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300

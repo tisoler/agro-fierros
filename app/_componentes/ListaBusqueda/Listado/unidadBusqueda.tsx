@@ -18,6 +18,7 @@ const UnidadBuscador = (
     <Link
       href={`/unidad/${unidad.slug}`}
       key={unidad.id}
+      prefetch={false}
       className="
         flex flex-row md:flex-col w-full md:max-w-[340px] h-[180px] md:h-auto group bg-white
         rounded-card overflow-hidden shadow-card hover:shadow-card-hover hover:-translate-y-0.5

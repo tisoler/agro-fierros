@@ -6,7 +6,7 @@ import Link from 'next/link';
 const Footer = () => {
   return (
     <footer className='grid grid-cols-1 auto-rows-auto gap-y-8 md:grid-cols-3 w-full bg-color-marca px-4 md:px-20 py-10 md:py-14'>
-      <Link href='/' title='AgroFierros - Inicio' className='flex items-center gap-2 col-1 row-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded'>
+      <Link href='/' prefetch={false} title='AgroFierros - Inicio' className='flex items-center gap-2 col-1 row-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded'>
         <Image alt='Logo AgroFierros' loading='lazy' src={'https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/genericas/logo.svg'} width={40} height={40} />
         <h2 className='flex flex-col text-white text-[22px] pb-1'>
           <span className="font-bold leading-6">
@@ -31,10 +31,10 @@ const Footer = () => {
       </div>
       <section className='flex items-start col-1 md:col-2 row-2 md:row-1 md:row-span-3'>
         <ul className='flex flex-col gap-2 text-lg md:text-xl font-semibold text-white'>
-          <li><Link className='hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded' href='/'>Inicio</Link></li>
-          <li><Link className='hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded' href='/buscar?categoria=todas'>Buscador de maquinarias y vehículos</Link></li>
-          <li><Link className='hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded' href='/buscar?categoria=maquinas-ombu'>Maquinaria Ombú</Link></li>
-          <li><Link className='hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded' href='/buscar?categoria=remolques'>Remolques</Link></li>
+          <li><Link prefetch={false} className='hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded' href='/'>Inicio</Link></li>
+          <li><Link prefetch={false} className='hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded' href='/buscar?categoria=todas'>Buscador de maquinarias y vehículos</Link></li>
+          <li><Link prefetch={false} className='hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded' href='/buscar?categoria=maquinas-ombu'>Maquinaria Ombú</Link></li>
+          <li><Link prefetch={false} className='hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded' href='/buscar?categoria=remolques'>Remolques</Link></li>
         </ul>
       </section>
       <span className='col-1 md:col-3 row-5 md:row-3 ml-auto mt-auto pt-6 text-white text-base md:text-lg font-semibold h-fit w-fit'>
