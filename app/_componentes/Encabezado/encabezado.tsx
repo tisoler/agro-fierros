@@ -2,7 +2,6 @@
 import { RefObject, Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { cdnLoader } from "@/app/_lib/utilidades";
 import estilo from './encabezado.module.css';
 import BarraBusqueda from "./BarraBusqueda";
 
@@ -46,23 +45,18 @@ export function Encabezado() {
     <>
       { /* Bloque extra que agrega espacio para que el header no coma pantalla ya que es fixed (el contenido que queda por detrá sube hasta el límite de arriba) */}
       <div className={`${estilo.headerPlaceholder} h-[60px] bg-white`}></div>
-      <header ref={headerMobileRef} className={`flex w-full h-[60px] fixed top-0 left-0 z-50 bg-color-marca shadow-md ${estilo.header}`}>
+      <header ref={headerMobileRef} className={`flex w-full h-[60px] fixed top-0 left-0 z-50 bg-white border-b-2 border-color-marca shadow-sm ${estilo.header}`}>
         <div className="flex w-full items-center justify-between px-2 py-3 md:px-6 md:py-0">
-          <Link prefetch={false} href="/" className={`flex items-center text-white ${mostrarBarraBusqueda ? 'hidden' : 'flex'}`}>
-            <div className="flex justify-center items-center mr-[0.4rem]">
+          <Link prefetch={false} href="/" className={`flex items-center ${mostrarBarraBusqueda ? 'hidden' : 'flex'}`}>
+            <h1 className="flex items-center">
               <Image
-                width={26}
-                height={26}
-                alt="AgroFierros"
+                width={167}
+                height={34}
+                alt="AgroFierros - Inicio"
                 priority
                 loading='eager'
-                src={"https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/genericas/logo.svg"}
+                src="/logos/agrofierros-horizontal.svg"
               />
-            </div>
-            <h1 className="grid cols-2 text-[25px] md:text-2xl">
-              <span className="font-semibold col-1 row-1 leading-5">
-                AgroFierros
-              </span>
             </h1>
           </Link>
           <Suspense>
@@ -71,12 +65,12 @@ export function Encabezado() {
           <ul className='hidden md:flex flex justify-center gap-4'>
             <li>
               <a href='https://www.instagram.com/fabiotommasi83/' target='_blank' title='Instagram' className='underline'>
-                <Image width={24} height={24} loading='lazy' alt="Instagram" src={'https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/genericas/instagram.svg'} />
+                <Image width={24} height={24} loading='lazy' alt="Instagram" src={'/logos/instagram.svg'} />
               </a>
             </li>
             <li>
               <a href='https://www.facebook.com/fabio.tommasi.520' target='_blank' title='Facebook' className='underline'>
-                <Image width={24} height={24} loading='lazy' alt="Facebook" src={'https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/genericas/facebook.svg'} />
+                <Image width={24} height={24} loading='lazy' alt="Facebook" src={'/logos/facebook.svg'} />
               </a>
             </li>
           </ul>

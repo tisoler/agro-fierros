@@ -7,17 +7,19 @@ const CarruselUnidadesContenedor = async (
 ) => {
   return (
     <div className={`
-      flex flex-col w-full ${variante === 'grande' ? 'py-12 md:py-20 px-2 md:px-20' : 'pt-4 pb-12 md:pt-10 md:pb-20 px-0'} 
+      flex flex-col w-full ${variante === 'grande'
+        ? 'py-12 md:py-20 px-2 md:px-20 bg-marca-100 border-y border-marca-500/20'
+        : 'pt-4 pb-12 md:pt-10 md:pb-20 px-0'}
     `}>
       {
         variante === 'grande' && (
           <Image
-            src={'https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/genericas/logo-rojo.svg'}
+            src={'/logos/agrofierros-simbolo.svg'}
             loading={`${priorizar ? 'eager' : 'lazy'}`}
             priority={priorizar}
             alt="Logo AgroFierros"
-            width={25}
-            height={25}
+            width={32}
+            height={32}
             className="ml-1"
           />
         )

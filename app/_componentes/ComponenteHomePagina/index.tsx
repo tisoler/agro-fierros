@@ -30,7 +30,7 @@ const ComponenteHome = async () => {
     '@type': 'Organization',
     name: 'AgroFierros',
     url: 'https://agrofierros.com.ar',
-    logo: 'https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/genericas/logo.svg',
+    logo: 'https://agrofierros.com.ar/logos/agrofierros-horizontal.svg',
     description: 'Portal de venta de maquinaria agrícola nueva y usada en la zona centro de Argentina.',
     areaServed: 'Argentina',
   };

@@ -2,7 +2,7 @@ import { UnidadConMarcaCategoriaDetallesImagenes } from '@/app/_lib/tipos';
 import { UnidadDetalle } from '@/app/_modelos/unidadDetalle';
 import { formatearPrecio } from '@/app/_lib/utilidades';
 import IconoHerramientas from '../IconosSvg/Herramientas';
-import { VENDIDA, WHATSAPP_BOTON_TEXTO, WHATSAPP_MENSAJE_UNIDAD, WHATSAPP_NUMERO } from '@/app/_lib/constantes';
+import { NOVEDAD, VENDIDA, WHATSAPP_BOTON_TEXTO, WHATSAPP_MENSAJE_UNIDAD, WHATSAPP_NUMERO } from '@/app/_lib/constantes';
 import WhatsAppIcono from '../IconosSvg/WhatsApp/WhatsAppIcono';
 import ImagenesDesktop from './ImagenesDesktop';
 import ImagenesMobile from './ImagenesMobile';
@@ -62,6 +62,11 @@ const Unidad = (
           {unidad?.esOportunidad && (
             <div className="rounded-full px-3 py-1 text-sm font-bold text-white bg-estado-oportunidad">
               OPORTUNIDAD
+            </div>
+          )}
+          {unidad?.esNovedad && (
+            <div className="rounded-full px-3 py-1 text-sm font-bold text-white bg-blue-600">
+              {NOVEDAD.toUpperCase()}
             </div>
           )}
           {unidad?.vendida && (

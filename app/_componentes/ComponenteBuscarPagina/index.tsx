@@ -26,7 +26,9 @@ export default async function ComponenteBuscar({ categoriaSlug, marcasSlug, term
   }];
 
   return (
-    <div className="flex flex-col items-center bg-color-fondo-gris px-1 md:px-2 pt-4 md:pt-8 pb-12 gap-2">
+    <>
+      <div aria-hidden className="h-2 w-full bg-color-marca" />
+      <div className="flex flex-col items-center bg-color-fondo-gris px-1 md:px-2 pt-4 md:pt-8 pb-12 gap-2">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -66,5 +68,6 @@ export default async function ComponenteBuscar({ categoriaSlug, marcasSlug, term
         </div>
       </ProveedorMarcas>
     </div>
+    </>
   );
 };

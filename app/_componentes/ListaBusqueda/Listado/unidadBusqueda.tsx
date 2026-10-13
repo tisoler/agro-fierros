@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { NUEVO, USADO } from "@/app/_lib/constantes";
+import { NUEVO, NOVEDAD, USADO } from "@/app/_lib/constantes";
 import { UnidadConMarca } from "@/app/_lib/tipos";
 import { cdnLoader, formatearPrecio } from "@/app/_lib/utilidades";
 import CintaVendida from "@/app/_componentes/CintaVendida";
@@ -48,6 +48,11 @@ const UnidadBuscador = (
           {unidad.esOportunidad && (
             <span className="rounded-full px-2 py-0.5 text-[10px] md:text-xs font-bold text-white shadow-sm bg-estado-oportunidad">
               OPORTUNIDAD
+            </span>
+          )}
+          {unidad.esNovedad && (
+            <span className="rounded-full px-2 py-0.5 text-[10px] md:text-xs font-bold text-white shadow-sm bg-blue-600">
+              {NOVEDAD.toUpperCase()}
             </span>
           )}
         </div>

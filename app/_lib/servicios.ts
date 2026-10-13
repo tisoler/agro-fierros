@@ -178,14 +178,14 @@ export const obtenerCarruselHome = unstable_cache(
 export const obtenerUnidadesOportunidades = unstable_cache(
   async (): Promise<UnidadConMarca[]> => {
     try {
-      await initUnidad();
+      const instancia = await initUnidad();
       const unidades = await Unidad.findAll({
         include: [{ model: Marca, as: 'marca', attributes: ['id', 'nombre'] }],
         where: {
           esOportunidad: true,
           activa: true,
         },
-        order: [['id', 'ASC']],
+        order: [[instancia.fn('COALESCE', instancia.col('ordenOportunidad'), 999999), 'ASC'], ['id', 'ASC']],
       });
       if (!unidades?.length) return [];
       return unidades.map(unidad => unidad.get({ plain: true })) as UnidadConMarca[];
@@ -201,14 +201,14 @@ export const obtenerUnidadesOportunidades = unstable_cache(
 export const obtenerUnidadesNovedades = unstable_cache(
   async (): Promise<UnidadConMarca[]> => {
     try {
-      await initUnidad();
+      const instancia = await initUnidad();
       const unidades = await Unidad.findAll({
         include: [{ model: Marca, as: 'marca', attributes: ['id', 'nombre'] }],
         where: {
           esNovedad: true,
           activa: true,
         },
-        order: [['id', 'ASC']],
+        order: [[instancia.fn('COALESCE', instancia.col('ordenNovedad'), 999999), 'ASC'], ['id', 'ASC']],
       });
       if (!unidades?.length) return [];
       return unidades.map(unidad => unidad.get({ plain: true })) as UnidadConMarca[];
