@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
     ],
     formats: ['image/avif', 'image/webp'], // AVIF first as it's more efficient
     minimumCacheTTL: 2592000, // 30 días en segundos
-    qualities: [25, 50, 75, 85, 90],
+    qualities: [25, 50, 75, 80, 85, 90],
   },
   reactStrictMode: true,
   turbopack: {

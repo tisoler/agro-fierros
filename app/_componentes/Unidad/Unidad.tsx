@@ -1,6 +1,6 @@
 import { UnidadConMarcaCategoriaDetallesImagenes } from '@/app/_lib/tipos';
 import { UnidadDetalle } from '@/app/_modelos/unidadDetalle';
-import { formatearPrecioDolar } from '@/app/_lib/utilidades';
+import { formatearPrecio } from '@/app/_lib/utilidades';
 import IconoHerramientas from '../IconosSvg/Herramientas';
 import { VENDIDA, WHATSAPP_BOTON_TEXTO, WHATSAPP_MENSAJE_UNIDAD, WHATSAPP_NUMERO } from '@/app/_lib/constantes';
 import WhatsAppIcono from '../IconosSvg/WhatsApp/WhatsAppIcono';
@@ -9,7 +9,7 @@ import ImagenesMobile from './ImagenesMobile';
 
 const Unidad = (
   { unidad, esDispositivoMovil = true }:
-  { unidad: UnidadConMarcaCategoriaDetallesImagenes, esDispositivoMovil?: boolean }
+    { unidad: UnidadConMarcaCategoriaDetallesImagenes, esDispositivoMovil?: boolean }
 ) => {
   const mensajeWhatsApp = `${WHATSAPP_MENSAJE_UNIDAD} ${unidad.titulo}.
     https://agrofierros.com.ar/${unidad.slug}
@@ -39,10 +39,15 @@ const Unidad = (
         <h1 className="w-full md:min-h-[72px] text-color-marca text-2xl md:text-3xl font-semibold mt-1 md:mt-0">
           {unidad?.titulo}
         </h1>
-        {/* Precio en dólares (solo si tiene) */}
+        {/* Precio (solo si tiene) */}
         {unidad?.precioDolar != null && (
           <p className="w-full text-2xl md:text-3xl font-bold text-slate-900 mt-1">
-            {formatearPrecioDolar(unidad.precioDolar)}
+            {formatearPrecio(unidad.precioDolar, unidad.monedaPrecio)}
+          </p>
+        )}
+        {unidad?.descripcion?.trim() && (
+          <p className="w-full mt-2 text-base md:text-lg text-neutral-700 whitespace-pre-line">
+            {unidad.descripcion.trim()}
           </p>
         )}
         <ImagenesMobile unidad={unidad} esDispositivoMovil={esDispositivoMovil} />

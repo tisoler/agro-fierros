@@ -229,7 +229,7 @@ export const obtenerUnidadPorSlug = (slug: string) => unstable_cache(
         include: [
           { model: Marca, as: 'marca', attributes: ['id', 'nombre'] },
           { model: Categoria, as: 'categorias', attributes: ['id', 'titulo', 'slug', 'descripcion'] },
-          { model: UnidadImagen, as: 'imagenes', separate: true, attributes: ['id', 'urlEscritorio', 'urlMobile', 'urlMini', 'textoAlt'] },
+          { model: UnidadImagen, as: 'imagenes', separate: true, attributes: ['id', 'urlEscritorio', 'urlMobile', 'urlMini', 'textoAlt', 'orden'], order: [['orden', 'ASC'], ['id', 'ASC']] },
           { model: UnidadDetalle, as: 'detalles', separate: true, attributes: ['id', 'detalle'] },
         ],
         where: {

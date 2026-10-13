@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { NUEVO, USADO } from "@/app/_lib/constantes";
 import { UnidadConMarca } from "@/app/_lib/tipos";
-import { cdnLoader, formatearPrecioDolar } from "@/app/_lib/utilidades";
+import { cdnLoader, formatearPrecio } from "@/app/_lib/utilidades";
 import CintaVendida from "@/app/_componentes/CintaVendida";
 
 const UnidadTarjeta = (
@@ -54,7 +54,7 @@ const UnidadTarjeta = (
         {/* Precio en dólares (solo si tiene) */}
         {unidad.precioDolar != null && (
           <div className="absolute bottom-2 left-2 rounded-btn bg-slate-900/85 px-2 py-0.5 text-xs md:text-sm font-bold text-white shadow-sm backdrop-blur-sm">
-            {formatearPrecioDolar(unidad.precioDolar)}
+            {formatearPrecio(unidad.precioDolar, unidad.monedaPrecio)}
           </div>
         )}
         {unidad.vendida && <CintaVendida />}

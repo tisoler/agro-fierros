@@ -75,9 +75,9 @@ export default async function PaginaUnidad({ params }: Props) {
       availability: unidad.vendida
         ? 'https://schema.org/SoldOut'
         : 'https://schema.org/InStock',
-      // El precio se publica solo si la unidad lo tiene cargado
+      // El precio se publica solo si la unidad lo tiene cargado, en su moneda
       ...(unidad.precioDolar != null
-        ? { priceCurrency: 'USD', price: unidad.precioDolar }
+        ? { priceCurrency: unidad.monedaPrecio ?? 'USD', price: unidad.precioDolar }
         : { priceCurrency: 'ARS' }),
     },
     breadcrumb: {
