@@ -77,7 +77,7 @@ export default function RootLayout({
           <WhatsAppButton fijo />
         </main>
         <Footer />
-        <GoogleTagManager gtmId='GTM-K92JH9KX' />
+        <GoogleTagManager gtmId='GTM-WJD29ZM3' />
       </body>
     </html>
   );
