@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import BotonIzquierda from '../BotonIzquierda';
 import BotonDerecha from '../BotonDerecha';
+import { srcSetOptimizado } from '@/app/_lib/utilidades';
 
 interface HorizontalScrollerProps {
   items: {
@@ -234,8 +235,18 @@ const ContenidoSlide = ({ item, idx, dimensions }: {
   dimensions: { width: number, height: number },
 }) => (
   <picture>
-    <source media="(min-width: 768px)" srcSet={item.urlImagenDesktop}></source>
-    <source media="(max-width: 767px)" srcSet={item.urlImagenMobile}></source>
+    {item.urlImagenDesktop ? (
+      <source
+        media="(min-width: 768px)"
+        srcSet={srcSetOptimizado(item.urlImagenDesktop, [1200, 1920], 85)}
+        sizes="100vw"
+      />
+    ) : null}
+    <source
+      media="(max-width: 767px)"
+      srcSet={srcSetOptimizado(item.urlImagenMobile, [640, 828, 1080], 80)}
+      sizes="100vw"
+    />
     <Image
       priority={idx === 0}
       loading={idx === 0 ? 'eager' : 'lazy'}
