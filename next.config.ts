@@ -3,6 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   output: 'standalone',
+  // sharp (optimizador next/image) fuera del bundler, como el resto server-only
+  serverExternalPackages: ['sequelize', 'mysql2', 'sharp'],
   images: {
     remotePatterns: [
       {

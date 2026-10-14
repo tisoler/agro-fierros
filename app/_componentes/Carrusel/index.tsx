@@ -237,9 +237,9 @@ const ContenidoSlide = ({ item, idx, dimensions }: {
     <source media="(min-width: 768px)" srcSet={item.urlImagenDesktop}></source>
     <source media="(max-width: 767px)" srcSet={item.urlImagenMobile}></source>
     <Image
-      priority
-      loading="eager"
-      fetchPriority={idx === 0 ? 'high' : 'auto'}
+      priority={idx === 0}
+      loading={idx === 0 ? 'eager' : 'lazy'}
+      fetchPriority={idx === 0 ? 'high' : 'low'}
       src="https://tisolercdn.nyc3.cdn.digitaloceanspaces.com/agrofierros/genericas/transparente-chica.svg"
       alt={item.textoAlt}
       width={dimensions.width}

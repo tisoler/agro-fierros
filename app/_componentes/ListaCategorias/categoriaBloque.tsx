@@ -3,7 +3,6 @@ import Link from "next/link";
 import Image from "next/image";
 import estilo from './categoriaBloque.module.css';
 import { CategoriaTipo } from "@/app/_lib/tipos";
-import { cdnLoader } from "@/app/_lib/utilidades";
 
 const CategoriaBloque = ({ categoria, esGrande = false }: { categoria: CategoriaTipo, esGrande?: boolean }) => {
   return (
@@ -17,14 +16,13 @@ const CategoriaBloque = ({ categoria, esGrande = false }: { categoria: Categoria
     >
       <div className="relative aspect-[4/5] md:aspect-auto md:h-[30vw] w-full">
         <Image
-          loader={cdnLoader}
           src={categoria.imagenEscritorio}
           alt={categoria.titulo}
           loading="lazy"
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover object-center"
-          quality={85} // Optimización de calidad
+          quality={80} // Optimización de calidad
         />
       </div>
       <div
