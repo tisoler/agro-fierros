@@ -8,86 +8,102 @@ import { UnidadImagen } from "../_modelos/unidadImagen";
 import { UnidadDetalle } from "../_modelos/unidadDetalle";
 import { CarruselHome, initCarruselHome } from "../_modelos/carruselHome";
 import { Op, Order } from "sequelize";
-import { MAIZ, SOJA, TRIGO, USD_BLUE, USD_OFICIAL } from "./constantes";
+import { DOLAR_BLUE, DOLAR_BNA_COMPRA, DOLAR_BNA_VENTA, GIRASOL, MAIZ, SOJA, SORGO, TRIGO } from "./constantes";
 
 const obtenerPreciosDolar = unstable_cache(
   async (): Promise<PrecioMercadoTipo[]> => {
-    // DÓLAR desde API
-    let dolares: PrecioMercadoTipo[] = [];
+    // DÓLAR desde dolarapi: blue (venta) + mayorista como BNA (compra y venta)
     try {
       const respDolar = await fetch('https://dolarapi.com/v1/dolares');
       if (!respDolar.ok) {
         console.error('Error obteniendo dólares desde dolarapi.');
+        return [];
       }
 
-      const dataDolar = await respDolar.json() as Record<string, string>[];
-      const dolarOficial = dataDolar.find(d => d.casa === 'oficial')?.venta;
-      const dolarBlue = dataDolar.find(d => d.casa === 'blue')?.venta;
+      const dataDolar = await respDolar.json() as Record<string, string | number>[];
+      const blue = dataDolar.find(d => d.casa === 'blue');
+      const mayorista = dataDolar.find(d => d.casa === 'mayorista');
+      const numero = (v: unknown) => {
+        const n = Number(v);
+        return Number.isFinite(n) ? n : 0;
+      };
 
-      dolares = [
-        {
-          id: 1,
-          nombre: USD_OFICIAL,
-          precio: isNaN(Number(dolarOficial)) ? 0 : Number(dolarOficial),
-          activo: true,
-          icono: 'dolarIcono'
-        },
-        {
-          id: 2,
-          nombre: USD_BLUE,
-          precio: isNaN(Number(dolarBlue)) ? 0 : Number(dolarBlue),
-          activo: true,
-          icono: 'dolarIcono'
-        },
+      return [
+        { id: 1, nombre: DOLAR_BLUE, precio: numero(blue?.venta), activo: true, icono: 'dolarIcono' },
+        { id: 2, nombre: DOLAR_BNA_COMPRA, precio: numero(mayorista?.compra), activo: true, icono: 'dolarIcono' },
+        { id: 3, nombre: DOLAR_BNA_VENTA, precio: numero(mayorista?.venta), activo: true, icono: 'dolarIcono' },
       ];
     } catch (e) {
       console.error('Error obteniendo dólares desde dolarapi.', e);
+      return [];
     }
-
-    return dolares;
   },
   ['precios-dolar'],
   { revalidate: 1800, tags: ['precios-dolar'] } // revalidar cada media hora
 );
 
+// Número en formato es-AR ("345.805,00") → number.
+const parseNumeroEs = (texto: string): number | null => {
+  const n = Number(texto.replace(/\./g, '').replace(',', '.'));
+  return Number.isFinite(n) ? n : null;
+};
+
+const CEREALES_CAC: { nombre: string; icono: string }[] = [
+  { nombre: TRIGO, icono: 'trigoIcono' },
+  { nombre: MAIZ, icono: 'maizIcono' },
+  { nombre: SOJA, icono: 'sojaIcono' },
+  { nombre: GIRASOL, icono: 'girasolIcono' },
+  { nombre: SORGO, icono: 'sorgoIcono' },
+];
+
 const obtenerPreciosCerelaes = unstable_cache(
   async (): Promise<PrecioMercadoTipo[]> => {
-    // PRECIO CEREALEA desde API
-    let preciosCereales: PrecioMercadoTipo[] = [];
+    // PIZARRA CAC por scraping directo (sin proxy): $/Tn por cereal
     try {
-      const respCereales = await fetch(
-        'https://api.scrapingant.com/v2/general?url=https%3A%2F%2Fapi-cotizaciones.agrofy.com.ar%2Fapi%2FBoardPrices%2FGetBoardPricesHome&x-api-key=14386fc4e4b541be86dba7e78b7a7e12&proxy_type=residential&return_page_source=true'
-      );
-      if (!respCereales.ok) {
-        console.error('Error obteniendo precios de cereales desde agrofy.');
+      const respPizarra = await fetch('https://cac.bcr.com.ar/es/precios-de-pizarra', {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (compatible; AgroFierros/1.0)',
+          Accept: 'text/html',
+        },
+        signal: AbortSignal.timeout(15000),
+      });
+      if (!respPizarra.ok) {
+        console.error('Error obteniendo pizarra desde CAC.');
+        return [];
       }
-      const dataCereales = await respCereales.json() as { Productos: { Producto: string, Mercados: { Nombre: string, Precio: string }[]}[] }[];
-      if (!dataCereales?.length && dataCereales[0]?.Productos) {
-        console.error('Error obteniendo precios de cereales desde agrofy - No hay productos.');
+      const html = await respPizarra.text();
+      const preciosPorClave = new Map<string, number>();
+      for (const chunk of html.split('<div class="board board-').slice(1)) {
+        const clave = chunk.match(/^([\w-]+)/)?.[1]?.toLowerCase() ?? '';
+        const bloque = (chunk.split('style="text-align: center;"')[0] ?? chunk).slice(0, 1500);
+        const priceDiv = bloque.match(/<div class="price">([\s\S]*?)<\/div>/);
+        const texto = (priceDiv?.[1] ?? '').replace(/<[^>]+>/g, ' ');
+        const primero = [...texto.matchAll(/([\d.,]+)/g)]
+          .map((m) => parseNumeroEs(m[1]))
+          .find((n): n is number => n !== null);
+        if (primero != null) {
+          preciosPorClave.set(clave, Math.round(primero));
+        }
       }
-      preciosCereales = dataCereales[0]?.Productos
-        ?.filter(cereal => [TRIGO, SOJA, 'Maiz'].includes(cereal.Producto))
-        ?.map((cereal, idx) => {
-          const nombre = cereal.Producto === TRIGO ? TRIGO : cereal.Producto === 'Maiz' ? MAIZ : SOJA;
-          const icono = cereal.Producto === TRIGO ? 'trigoIcono' : cereal.Producto === 'Maiz' ? 'maizIcono' : 'sojaIcono';
-          const precio = cereal.Mercados?.find(mercado => mercado.Nombre === 'Rosario')?.Precio?.replaceAll('.', '').replaceAll(',00', '') || 0;
-
-          return ({
-            id: 3 + idx,
-            nombre: nombre,
-            precio: isNaN(Number(precio)) ? 0 : Number(precio),
-            activo: true,
-            icono,
-          })}
-        ) || [];
+      const normalizar = (s: string) =>
+        s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      return CEREALES_CAC.map((cereal, idx) => {
+        const clave = normalizar(cereal.nombre);
+        return {
+          id: 4 + idx,
+          nombre: cereal.nombre,
+          precio: preciosPorClave.get(clave) ?? 0,
+          activo: true,
+          icono: cereal.icono,
+        };
+      }).filter((cereal) => cereal.precio > 0);
     } catch (e) {
-      console.error('Error obteniendo precios de cereales desde agrofy.', e);
+      console.error('Error obteniendo pizarra desde CAC.', e);
+      return [];
     }
-
-    return preciosCereales;
   },
   ['precios-cereales'],
-  { revalidate: 10800, tags: ['precios-cereales'] } // revalidar cada 3 horas
+  { revalidate: 21600, tags: ['precios-cereales'] } // revalidar cada 6 horas (pizarra diaria)
 );
 
 export const obtenerPrecios = unstable_cache(
@@ -107,21 +123,16 @@ export const obtenerPrecios = unstable_cache(
       });
 
       if (!precios?.length) return [];
-      const preciosPlano = precios.map(precio => {
-        if (precio.nombre === USD_OFICIAL && dolares?.some(d => d.nombre === USD_OFICIAL)) {
-          return dolares.find(d => d.nombre === USD_OFICIAL) as PrecioMercadoTipo;
-        } else if (precio.nombre === USD_BLUE && dolares?.some(d => d.nombre === USD_BLUE)) {
-          return dolares.find(d => d.nombre === USD_BLUE) as PrecioMercadoTipo;
-        } else if (precio.nombre === TRIGO && preciosCereales?.some(d => d.nombre === TRIGO)) {
-          return preciosCereales.find(d => d.nombre === TRIGO) as PrecioMercadoTipo;
-        } else if (precio.nombre === SOJA && preciosCereales?.some(d => d.nombre === SOJA)) {
-          return preciosCereales.find(d => d.nombre === SOJA) as PrecioMercadoTipo;
-        } else if (precio.nombre === MAIZ && preciosCereales?.some(d => d.nombre === MAIZ)) {
-          return preciosCereales.find(d => d.nombre === MAIZ) as PrecioMercadoTipo;
-        }
-        return precio.get({ plain: true })
-      });
-      return preciosPlano;
+      const enVivo = new Map<string, PrecioMercadoTipo>();
+      for (const d of [...dolares, ...preciosCereales]) {
+        enVivo.set(d.nombre, d);
+      }
+      // Se prefiere el vivo; si falta alguno se usa el valor de la base.
+      // OJO: los nombres son la clave del cruce — si se renombra una constante
+      // hay que renombrar también la fila en preciosMercado.
+      return precios
+        .map(precio => enVivo.get(precio.nombre) ?? precio.get({ plain: true }))
+        .filter(precio => (precio as PrecioMercadoTipo).precio > 0);
     } catch {
       console.error('Error obteniendo precios de mercado');
       return [];

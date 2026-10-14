@@ -33,17 +33,19 @@
       z-index: 3;
   }
 
+  /* Loop infinito: la pista mide 2 copias y avanza 1 (vars desde el componente) */
   .slider {
+    --paso: 150px;
     display: flex;
-    width: calc(145px * 10); /* Double the content for seamless loop */
-    animation: slide 18s linear infinite;
+    width: calc(var(--paso) * var(--n, 8) * 2);
+    animation: slide var(--duracion, 30s) linear infinite;
     color: black;
   }
 
   .slide {
     display: flex;
-    gap: 5px;
-    width: 145px;
+    gap: 2px;
+    width: var(--paso);
     height: 70px;
     display: flex;
     justify-content: center;
@@ -56,23 +58,12 @@
       transform: translateX(0);
     }
     to {
-      transform: translateX(calc(-145px * 5)); /* Move by half the content */
+      transform: translateX(calc(var(--paso) * var(--n, 8) * -1));
     }
   }
 
-  @media (max-width: 768px) {  
-    .slide {
-      width: 130px;
-    }
-    
+  @media (max-width: 768px) {
     .slider {
-      width: calc(130px * 10);
-      animation: slide 18s linear infinite;
-    }
-    
-    @keyframes slide {
-      to {
-        transform: translateX(calc(-130px * 5));
-      }
+      --paso: 132px;
     }
   }

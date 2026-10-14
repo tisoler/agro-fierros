@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { preload } from "react-dom";
 import dynamic from "next/dynamic";
 import Carrusel from "../Carrusel";
 import SkeletonCarrusel from "../Skeletons/Carrusel";
@@ -9,6 +10,7 @@ import SkeletonSubtitulo from "../Skeletons/Subtitulo";
 import ContenedorCarruselNovedades from "../CarruselUnidades/Contenedores/Novedades";
 import ContenedorCarruselOportunidades from "../CarruselUnidades/Contenedores/Oportunidades";
 import { obtenerCarruselHome } from "@/app/_lib/servicios";
+import { srcSetOptimizado } from "@/app/_lib/utilidades";
 
 // Carga diferida del componente que no es crítico
 const SubtituloDinamico = dynamic(() => import('../Subtitulo/subtitulo'), {
@@ -53,6 +55,17 @@ const ComponenteHome = async () => {
       }))
     : itemsCarruselDefecto;
 
+  // Preload del LCP mobile (primera slide): el <picture> no lo precarga solo
+  // y el priority del placeholder no alcanza. Solo mobile: desktop está bien.
+  const primeraSlide = itemsCarruselPrincipal[0];
+  if (primeraSlide) {
+    preload(primeraSlide.urlImagenMobile, {
+      as: 'image',
+      imageSrcSet: srcSetOptimizado(primeraSlide.urlImagenMobile, [640, 828, 1080], 80),
+      imageSizes: '100vw',
+    });
+  }
+
   return (
     <section className="flex flex-col bg-white">
       <script
@@ -63,7 +76,7 @@ const ComponenteHome = async () => {
         <Carrusel items={itemsCarruselPrincipal} />
       </Suspense>
       <Suspense fallback={<SkeletonCarruselUnidades />}>
-        <ContenedorCarruselOportunidades titulo='Oportunidades' priorizar />
+        <ContenedorCarruselOportunidades titulo='Oportunidades' />
       </Suspense>
       <SubtituloDinamico />
       <ListaCategorias />

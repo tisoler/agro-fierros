@@ -20,9 +20,6 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname, // repo root explícito (evita que infiera el workspace incorrectamente)
   },
-  experimental: {
-    inlineCss: true,
-  },
   // htmlLimitedBots: /.*/, Descomentar para Lighthouse, evita el metadata streaming y así asegura los metedata en el head. NextJS lo hace automáticamente para crawdlers y bots, no se necesita en producción.
 };
 

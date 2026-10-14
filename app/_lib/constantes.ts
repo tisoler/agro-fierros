@@ -18,7 +18,7 @@ export enum OPCIONES_ORDEN {
   ninguno = 'Ninguno',
   categoria = 'Categoría',
   marca = 'Marca',
-  unidad=  'Título unidad',
+  unidad = 'Título unidad',
 };
 export const OPCION_ORDEN_DEFECTO = 'ninguno';
 
@@ -28,8 +28,11 @@ export const CANTIDAD_UNIDADES_RELACIONADAS = 7;
 // Con inventarios chicos la paginación queda transparente (una sola página).
 export const UNIDADES_POR_PAGINA = 48;
 
-export const USD_OFICIAL = 'USD oficial';
-export const USD_BLUE = 'USD blue';
+export const DOLAR_BLUE = 'Dólar blue';
+export const DOLAR_BNA_COMPRA = 'Dólar BNA C';
+export const DOLAR_BNA_VENTA = 'Dólar BNA V';
 export const TRIGO = 'Trigo';
 export const SOJA = 'Soja';
 export const MAIZ = 'Maíz';
+export const GIRASOL = 'Girasol';
+export const SORGO = 'Sorgo';
